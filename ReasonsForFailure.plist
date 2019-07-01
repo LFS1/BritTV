@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>FileExists</key>
+	<string>This show already exists in the download directory. If you would
+like to download it again, delete the file first.</string>
+	<key>Outside_UK</key>
+	<string>Broadcaster thinks you are outside the UK.</string>
+	<key>No_Duration</key>
+	<string>Youtube-dl did not return the duration of the programme</string>
+	<key>Signed_Only</key>
+	<string>The programme could not be downloaded as it was only available in a signed format</string>
+</dict>
+</plist>

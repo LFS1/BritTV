@@ -1,0 +1,649 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 47;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		393D1DEE18A5BBB500F27880 /* RSRTVArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 393D1DED18A5BBB500F27880 /* RSRTVArrayController.m */; };
+		396FDA611DA98179003F3F57 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 396FDA5F1DA98179003F3F57 /* MainMenu.xib */; };
+		39879DAF16904B9F0050CA7D /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 39879DAC16904B9F0050CA7D /* GTMNSString+HTML.m */; };
+		39879DB016904B9F0050CA7D /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 39879DAE16904B9F0050CA7D /* NSString+HTML.m */; };
+		39ABB9C017FCCD9300B5D519 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D93AD85317DC9D6E00458B1C /* Growl.framework */; };
+		39D52EA81DAAFD450033C4ED /* NPHistoryWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D52EA71DAAFD450033C4ED /* NPHistoryWindowController.m */; };
+		39D7C1BD1874AD7400B78698 /* StringTrimFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D7C1BC1874AD7400B78698 /* StringTrimFormatter.m */; };
+		39FD5E9619D370BD006BC47B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39FD5E9519D370BD006BC47B /* Images.xcassets */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		BF065A3E1EE0669C00F54636 /* This Release in Resources */ = {isa = PBXBuildFile; fileRef = BF065A3D1EE0669C00F54636 /* This Release */; };
+		BF065A411EE1CEA100F54636 /* ProgrammeCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BF065A401EE1CEA100F54636 /* ProgrammeCache.m */; };
+		BF065A441EE5FEB300F54636 /* DownloadHistoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BF065A431EE5FEB300F54636 /* DownloadHistoryCache.m */; };
+		BF382ED21D73C23400BAF106 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF382ED11D73C23400BAF106 /* AppController.m */; };
+		BF382EDE1D73C30400BAF106 /* GetITVListings.m in Sources */ = {isa = PBXBuildFile; fileRef = BF382EDD1D73C30400BAF106 /* GetITVListings.m */; };
+		BF382EE31D73C36300BAF106 /* NPHistoryWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF382EE21D73C36300BAF106 /* NPHistoryWindow.xib */; };
+		BF42A19D212B386300437746 /* DisplayDateTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = BF42A19C212B386300437746 /* DisplayDateTransformer.m */; };
+		BF582898201E317C00EFEC3F /* YoutubeDLDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = BF582897201E317C00EFEC3F /* YoutubeDLDownload.m */; };
+		BF6DE5F720D0003B004BA9DA /* PageData.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6DE5F620D0003B004BA9DA /* PageData.m */; };
+		BFA3B40E1EB53CBE0047FFEB /* getBBCListings.m in Sources */ = {isa = PBXBuildFile; fileRef = BFA3B40D1EB53CBE0047FFEB /* getBBCListings.m */; };
+		BFDF8E3D1EB802F500B76603 /* ProgramHistoryObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDF8E3C1EB802F500B76603 /* ProgramHistoryObject.m */; };
+		BFDF8E401EB8040900B76603 /* NewProgrammeHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDF8E3F1EB8040900B76603 /* NewProgrammeHistory.m */; };
+		BFDF8E431EB8053000B76603 /* ProgrammeData.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDF8E421EB8053000B76603 /* ProgrammeData.m */; };
+		BFECC2731F02DB5F00344DA4 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFECC2721F02DB5F00344DA4 /* IOKit.framework */; };
+		BFECC2751F02E06E00344DA4 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BFECC2741F02E06E00344DA4 /* libz.1.dylib */; };
+		D914BC59100C9F0100F7E68E /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D914BC58100C9F0100F7E68E /* ScriptingBridge.framework */; };
+		D9178595101345D700B82736 /* SeriesLink.m in Sources */ = {isa = PBXBuildFile; fileRef = D9178594101345D700B82736 /* SeriesLink.m */; };
+		D92687C51087F81F000E8132 /* DownloadHistoryController.m in Sources */ = {isa = PBXBuildFile; fileRef = D92687C41087F81F000E8132 /* DownloadHistoryController.m */; };
+		D92687CA1087F836000E8132 /* DownloadHistoryEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = D92687C91087F836000E8132 /* DownloadHistoryEntry.m */; };
+		D93AD85417DC9D6E00458B1C /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93AD85317DC9D6E00458B1C /* Growl.framework */; };
+		D941D99C1025DDA90012A75F /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D941D99B1025DDA90012A75F /* AddressBook.framework */; };
+		D941D9A01025DDCF0012A75F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D941D99F1025DDCF0012A75F /* SystemConfiguration.framework */; };
+		D9A4509D102FF8090011E175 /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = D9A4509C102FF8090011E175 /* Credits.html */; };
+		D9A450A4102FFDC00011E175 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D9A450A3102FFDC00011E175 /* LICENSE.txt */; };
+		D9B6DB9A196D9AEC00161ECB /* LogController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B6DB99196D9AEC00161ECB /* LogController.m */; };
+		D9CCF54C1025AAF9009205BE /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = D9CCF54B1025AAF9009205BE /* Growl Registration Ticket.growlRegDict */; };
+		D9F97FEC198EBA94006494A3 /* NSFileManager+DirectoryLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F97FEB198EBA94006494A3 /* NSFileManager+DirectoryLocations.m */; };
+		DFC865E213E96BE200606599 /* ReasonForFailure.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC865E113E96BE200606599 /* ReasonForFailure.m */; };
+		DFFF196713E96288007B52AC /* ReasonsForFailure.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFFF196613E96288007B52AC /* ReasonsForFailure.plist */; };
+		E3506C44224579CB004A964B /* rtmpdump in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3506C3F2245797E004A964B /* rtmpdump */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		E3D077812260FBA600BC0BE2 /* ffmpeg in Resources */ = {isa = PBXBuildFile; fileRef = E3D077802260FBA500BC0BE2 /* ffmpeg */; };
+		E3D077832260FC0F00BC0BE2 /* ffmpeg in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D077802260FBA500BC0BE2 /* ffmpeg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		E3D077842260FC1600BC0BE2 /* youtube-dl in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D077822260FBFA00BC0BE2 /* youtube-dl */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D943D2721B37B19D00452FCD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				E3D077842260FC1600BC0BE2 /* youtube-dl in CopyFiles */,
+				E3D077832260FC0F00BC0BE2 /* ffmpeg in CopyFiles */,
+				E3506C44224579CB004A964B /* rtmpdump in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9CCF443102349ED009205BE /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				39ABB9C017FCCD9300B5D519 /* Growl.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		32CA4F630368D1EE00C91783 /* Brit TV GUI_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Brit TV GUI_Prefix.pch"; sourceTree = "<group>"; };
+		393D1DEC18A5BBB500F27880 /* RSRTVArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSRTVArrayController.h; sourceTree = "<group>"; };
+		393D1DED18A5BBB500F27880 /* RSRTVArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSRTVArrayController.m; sourceTree = "<group>"; };
+		396FDA601DA98179003F3F57 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		39879DAB16904B9F0050CA7D /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
+		39879DAC16904B9F0050CA7D /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
+		39879DAD16904B9F0050CA7D /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
+		39879DAE16904B9F0050CA7D /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
+		39D52EA61DAAFD450033C4ED /* NPHistoryWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NPHistoryWindowController.h; sourceTree = "<group>"; };
+		39D52EA71DAAFD450033C4ED /* NPHistoryWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NPHistoryWindowController.m; sourceTree = "<group>"; };
+		39D7C1BB1874AD7400B78698 /* StringTrimFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringTrimFormatter.h; sourceTree = "<group>"; };
+		39D7C1BC1874AD7400B78698 /* StringTrimFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringTrimFormatter.m; sourceTree = "<group>"; };
+		39FD5E9519D370BD006BC47B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "Get iPlayer Automator/Images.xcassets"; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* BriTv.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BriTv.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF065A3D1EE0669C00F54636 /* This Release */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "This Release"; sourceTree = "<group>"; };
+		BF065A3F1EE1CEA100F54636 /* ProgrammeCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgrammeCache.h; sourceTree = "<group>"; };
+		BF065A401EE1CEA100F54636 /* ProgrammeCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgrammeCache.m; sourceTree = "<group>"; };
+		BF065A421EE5FEB300F54636 /* DownloadHistoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadHistoryCache.h; sourceTree = "<group>"; };
+		BF065A431EE5FEB300F54636 /* DownloadHistoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadHistoryCache.m; sourceTree = "<group>"; };
+		BF382ED01D73C21500BAF106 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
+		BF382ED11D73C23400BAF106 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+		BF382EDC1D73C2FB00BAF106 /* GetITVListings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetITVListings.h; sourceTree = "<group>"; };
+		BF382EDD1D73C30400BAF106 /* GetITVListings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetITVListings.m; sourceTree = "<group>"; };
+		BF382EE21D73C36300BAF106 /* NPHistoryWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NPHistoryWindow.xib; sourceTree = "<group>"; };
+		BF42A19B212B386300437746 /* DisplayDateTransformer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisplayDateTransformer.h; sourceTree = "<group>"; };
+		BF42A19C212B386300437746 /* DisplayDateTransformer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DisplayDateTransformer.m; sourceTree = "<group>"; };
+		BF582897201E317C00EFEC3F /* YoutubeDLDownload.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YoutubeDLDownload.m; sourceTree = "<group>"; };
+		BF582899201E31AC00EFEC3F /* YoutubeDLDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YoutubeDLDownload.h; sourceTree = "<group>"; };
+		BF6DE5F520D0003B004BA9DA /* PageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageData.h; sourceTree = "<group>"; };
+		BF6DE5F620D0003B004BA9DA /* PageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PageData.m; sourceTree = "<group>"; };
+		BFA3B40D1EB53CBE0047FFEB /* getBBCListings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = getBBCListings.m; sourceTree = "<group>"; };
+		BFA3B40F1EB53E800047FFEB /* getBBCListings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getBBCListings.h; sourceTree = "<group>"; };
+		BFDF8E3C1EB802F500B76603 /* ProgramHistoryObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramHistoryObject.m; sourceTree = "<group>"; };
+		BFDF8E3E1EB8037800B76603 /* ProgrammeHistoryObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgrammeHistoryObject.h; sourceTree = "<group>"; };
+		BFDF8E3F1EB8040900B76603 /* NewProgrammeHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewProgrammeHistory.m; sourceTree = "<group>"; };
+		BFDF8E411EB8044700B76603 /* NewProgrammeHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewProgrammeHistory.h; sourceTree = "<group>"; };
+		BFDF8E421EB8053000B76603 /* ProgrammeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgrammeData.m; sourceTree = "<group>"; };
+		BFDF8E461EB805BC00B76603 /* ProgrammeData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgrammeData.h; sourceTree = "<group>"; };
+		BFECC2721F02DB5F00344DA4 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		BFECC2741F02E06E00344DA4 /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = ../../../../../../usr/lib/libz.1.dylib; sourceTree = "<group>"; };
+		D914BC58100C9F0100F7E68E /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = /System/Library/Frameworks/ScriptingBridge.framework; sourceTree = "<absolute>"; };
+		D9158E06187150B000FBA515 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		D9178593101345D700B82736 /* SeriesLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeriesLink.h; sourceTree = "<group>"; };
+		D9178594101345D700B82736 /* SeriesLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeriesLink.m; sourceTree = "<group>"; };
+		D91F9D53187151D600D4388B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D921C9C1149BBF51004CB558 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		D92687C31087F81F000E8132 /* DownloadHistoryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadHistoryController.h; sourceTree = "<group>"; };
+		D92687C41087F81F000E8132 /* DownloadHistoryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadHistoryController.m; sourceTree = "<group>"; };
+		D92687C81087F836000E8132 /* DownloadHistoryEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadHistoryEntry.h; sourceTree = "<group>"; };
+		D92687C91087F836000E8132 /* DownloadHistoryEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadHistoryEntry.m; sourceTree = "<group>"; };
+		D93AD85317DC9D6E00458B1C /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Growl.framework; sourceTree = "<group>"; };
+		D941D99B1025DDA90012A75F /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = /System/Library/Frameworks/AddressBook.framework; sourceTree = "<absolute>"; };
+		D941D99F1025DDCF0012A75F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		D9A4509C102FF8090011E175 /* Credits.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Credits.html; sourceTree = "<group>"; };
+		D9A450A3102FFDC00011E175 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		D9B6DB98196D9AEC00161ECB /* LogController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogController.h; sourceTree = "<group>"; };
+		D9B6DB99196D9AEC00161ECB /* LogController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogController.m; sourceTree = "<group>"; };
+		D9CCF54B1025AAF9009205BE /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
+		D9F97FEA198EBA94006494A3 /* NSFileManager+DirectoryLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryLocations.h"; sourceTree = "<group>"; };
+		D9F97FEB198EBA94006494A3 /* NSFileManager+DirectoryLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryLocations.m"; sourceTree = "<group>"; };
+		DFC865E013E96BE200606599 /* ReasonForFailure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReasonForFailure.h; sourceTree = "<group>"; };
+		DFC865E113E96BE200606599 /* ReasonForFailure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReasonForFailure.m; sourceTree = "<group>"; };
+		DFFF196613E96288007B52AC /* ReasonsForFailure.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ReasonsForFailure.plist; sourceTree = "<group>"; };
+		E3506C3F2245797E004A964B /* rtmpdump */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = rtmpdump; sourceTree = "<group>"; };
+		E3D077802260FBA500BC0BE2 /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ffmpeg; sourceTree = "<group>"; };
+		E3D077822260FBFA00BC0BE2 /* youtube-dl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "youtube-dl"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BFECC2751F02E06E00344DA4 /* libz.1.dylib in Frameworks */,
+				BFECC2731F02DB5F00344DA4 /* IOKit.framework in Frameworks */,
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				D914BC59100C9F0100F7E68E /* ScriptingBridge.framework in Frameworks */,
+				D941D99C1025DDA90012A75F /* AddressBook.framework in Frameworks */,
+				D941D9A01025DDCF0012A75F /* SystemConfiguration.framework in Frameworks */,
+				D93AD85417DC9D6E00458B1C /* Growl.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D9B6DB9B196D9BE600161ECB /* Controllers */,
+				D91787021013803000B82736 /* Models */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D93AD85317DC9D6E00458B1C /* Growl.framework */,
+				D921C9C1149BBF51004CB558 /* CoreServices.framework */,
+				D941D99F1025DDCF0012A75F /* SystemConfiguration.framework */,
+				D941D99B1025DDA90012A75F /* AddressBook.framework */,
+				D914BC58100C9F0100F7E68E /* ScriptingBridge.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* BriTv.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* Get_iPlayer GUI */ = {
+			isa = PBXGroup;
+			children = (
+				BF065A3D1EE0669C00F54636 /* This Release */,
+				D9F97FE9198EBA73006494A3 /* Categories */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = "Get_iPlayer GUI";
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D90EF1361029CB3100290A67 /* Scripting Headers */,
+				32CA4F630368D1EE00C91783 /* Brit TV GUI_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				39FD5E9519D370BD006BC47B /* Images.xcassets */,
+				D9A450A3102FFDC00011E175 /* LICENSE.txt */,
+				D9A4509C102FF8090011E175 /* Credits.html */,
+				D904F04D1009F28400D60BBF /* Binaries */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				396FDA5F1DA98179003F3F57 /* MainMenu.xib */,
+				BF382EE21D73C36300BAF106 /* NPHistoryWindow.xib */,
+				D9CCF54B1025AAF9009205BE /* Growl Registration Ticket.growlRegDict */,
+				DFFF196613E96288007B52AC /* ReasonsForFailure.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BFECC2741F02E06E00344DA4 /* libz.1.dylib */,
+				BFECC2721F02DB5F00344DA4 /* IOKit.framework */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				D9158E06187150B000FBA515 /* CoreFoundation.framework */,
+				D91F9D53187151D600D4388B /* Foundation.framework */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D904F04D1009F28400D60BBF /* Binaries */ = {
+			isa = PBXGroup;
+			children = (
+				E3D077802260FBA500BC0BE2 /* ffmpeg */,
+				E3D077822260FBFA00BC0BE2 /* youtube-dl */,
+				E3506C3F2245797E004A964B /* rtmpdump */,
+			);
+			path = Binaries;
+			sourceTree = "<group>";
+		};
+		D90EF1361029CB3100290A67 /* Scripting Headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Scripting Headers";
+			sourceTree = "<group>";
+		};
+		D91787021013803000B82736 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BF382EDC1D73C2FB00BAF106 /* GetITVListings.h */,
+				BF382EDD1D73C30400BAF106 /* GetITVListings.m */,
+				BFA3B40F1EB53E800047FFEB /* getBBCListings.h */,
+				BFA3B40D1EB53CBE0047FFEB /* getBBCListings.m */,
+				BF6DE5F520D0003B004BA9DA /* PageData.h */,
+				BF6DE5F620D0003B004BA9DA /* PageData.m */,
+				BFDF8E461EB805BC00B76603 /* ProgrammeData.h */,
+				BFDF8E421EB8053000B76603 /* ProgrammeData.m */,
+				BF065A3F1EE1CEA100F54636 /* ProgrammeCache.h */,
+				BF065A401EE1CEA100F54636 /* ProgrammeCache.m */,
+				BFDF8E3F1EB8040900B76603 /* NewProgrammeHistory.m */,
+				BFDF8E411EB8044700B76603 /* NewProgrammeHistory.h */,
+				BFDF8E3E1EB8037800B76603 /* ProgrammeHistoryObject.h */,
+				BFDF8E3C1EB802F500B76603 /* ProgramHistoryObject.m */,
+				39D7C1BB1874AD7400B78698 /* StringTrimFormatter.h */,
+				39D7C1BC1874AD7400B78698 /* StringTrimFormatter.m */,
+				BF42A19B212B386300437746 /* DisplayDateTransformer.h */,
+				BF42A19C212B386300437746 /* DisplayDateTransformer.m */,
+				BF582899201E31AC00EFEC3F /* YoutubeDLDownload.h */,
+				BF582897201E317C00EFEC3F /* YoutubeDLDownload.m */,
+				D9178593101345D700B82736 /* SeriesLink.h */,
+				D9178594101345D700B82736 /* SeriesLink.m */,
+				D92687C81087F836000E8132 /* DownloadHistoryEntry.h */,
+				D92687C91087F836000E8132 /* DownloadHistoryEntry.m */,
+				DFC865E013E96BE200606599 /* ReasonForFailure.h */,
+				DFC865E113E96BE200606599 /* ReasonForFailure.m */,
+				BF065A421EE5FEB300F54636 /* DownloadHistoryCache.h */,
+				BF065A431EE5FEB300F54636 /* DownloadHistoryCache.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		D9B6DB9B196D9BE600161ECB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				39D52EA61DAAFD450033C4ED /* NPHistoryWindowController.h */,
+				39D52EA71DAAFD450033C4ED /* NPHistoryWindowController.m */,
+				393D1DEC18A5BBB500F27880 /* RSRTVArrayController.h */,
+				393D1DED18A5BBB500F27880 /* RSRTVArrayController.m */,
+				BF382ED01D73C21500BAF106 /* AppController.h */,
+				BF382ED11D73C23400BAF106 /* AppController.m */,
+				D92687C31087F81F000E8132 /* DownloadHistoryController.h */,
+				D92687C41087F81F000E8132 /* DownloadHistoryController.m */,
+				D9B6DB98196D9AEC00161ECB /* LogController.h */,
+				D9B6DB99196D9AEC00161ECB /* LogController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		D9F97FE9198EBA73006494A3 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				D9F97FEA198EBA94006494A3 /* NSFileManager+DirectoryLocations.h */,
+				D9F97FEB198EBA94006494A3 /* NSFileManager+DirectoryLocations.m */,
+				39879DAB16904B9F0050CA7D /* GTMNSString+HTML.h */,
+				39879DAC16904B9F0050CA7D /* GTMNSString+HTML.m */,
+				39879DAD16904B9F0050CA7D /* NSString+HTML.h */,
+				39879DAE16904B9F0050CA7D /* NSString+HTML.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* BriTv */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BriTv" */;
+			buildPhases = (
+				D9CCF443102349ED009205BE /* Copy Frameworks */,
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+				D975D7EB19A11DC400EEF909 /* Run Script */,
+				D943D2721B37B19D00452FCD /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BriTv;
+			productInstallPath = "$(HOME)/Applications";
+			productName = "Get_iPlayer GUI";
+			productReference = 8D1107320486CEB800E47090 /* BriTv.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1020;
+				TargetAttributes = {
+					8D1107260486CEB800E47090 = {
+						DevelopmentTeam = 2C26AD8SGU;
+					};
+				};
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Brit TV GUI" */;
+			compatibilityVersion = "Xcode 6.3";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+				English,
+				Base,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* Get_iPlayer GUI */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* BriTv */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39FD5E9619D370BD006BC47B /* Images.xcassets in Resources */,
+				396FDA611DA98179003F3F57 /* MainMenu.xib in Resources */,
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				BF065A3E1EE0669C00F54636 /* This Release in Resources */,
+				D9CCF54C1025AAF9009205BE /* Growl Registration Ticket.growlRegDict in Resources */,
+				E3D077812260FBA600BC0BE2 /* ffmpeg in Resources */,
+				BF382EE31D73C36300BAF106 /* NPHistoryWindow.xib in Resources */,
+				D9A4509D102FF8090011E175 /* Credits.html in Resources */,
+				D9A450A4102FFDC00011E175 /* LICENSE.txt in Resources */,
+				DFFF196713E96288007B52AC /* ReasonsForFailure.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D975D7EB19A11DC400EEF909 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#${PROJECT_DIR}/scripts/UpdateBuildNumber.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				D9178595101345D700B82736 /* SeriesLink.m in Sources */,
+				BFDF8E401EB8040900B76603 /* NewProgrammeHistory.m in Sources */,
+				BF065A411EE1CEA100F54636 /* ProgrammeCache.m in Sources */,
+				D92687C51087F81F000E8132 /* DownloadHistoryController.m in Sources */,
+				D92687CA1087F836000E8132 /* DownloadHistoryEntry.m in Sources */,
+				DFC865E213E96BE200606599 /* ReasonForFailure.m in Sources */,
+				BF42A19D212B386300437746 /* DisplayDateTransformer.m in Sources */,
+				BFDF8E3D1EB802F500B76603 /* ProgramHistoryObject.m in Sources */,
+				D9B6DB9A196D9AEC00161ECB /* LogController.m in Sources */,
+				39D52EA81DAAFD450033C4ED /* NPHistoryWindowController.m in Sources */,
+				BF065A441EE5FEB300F54636 /* DownloadHistoryCache.m in Sources */,
+				393D1DEE18A5BBB500F27880 /* RSRTVArrayController.m in Sources */,
+				39D7C1BD1874AD7400B78698 /* StringTrimFormatter.m in Sources */,
+				D9F97FEC198EBA94006494A3 /* NSFileManager+DirectoryLocations.m in Sources */,
+				BFA3B40E1EB53CBE0047FFEB /* getBBCListings.m in Sources */,
+				39879DAF16904B9F0050CA7D /* GTMNSString+HTML.m in Sources */,
+				BF582898201E317C00EFEC3F /* YoutubeDLDownload.m in Sources */,
+				39879DB016904B9F0050CA7D /* NSString+HTML.m in Sources */,
+				BF6DE5F720D0003B004BA9DA /* PageData.m in Sources */,
+				BF382EDE1D73C30400BAF106 /* GetITVListings.m in Sources */,
+				BFDF8E431EB8053000B76603 /* ProgrammeData.m in Sources */,
+				BF382ED21D73C23400BAF106 /* AppController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		396FDA5F1DA98179003F3F57 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				396FDA601DA98179003F3F57 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_GC = unsupported;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Brit TV GUI_Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SHADOW = NO;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Binaries\"",
+					"$(PROJECT_DIR)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CODE_SIGN_FLAGS = "--no-strict";
+				OTHER_LDFLAGS = "-licucore";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LFS.BriTv;
+				PRODUCT_NAME = BriTv;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)",
+					"$(PROJECT_DIR)",
+				);
+				GCC_ENABLE_OBJC_GC = unsupported;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Brit TV GUI_Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Binaries\"",
+					"$(PROJECT_DIR)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CODE_SIGN_FLAGS = "--no-strict";
+				OTHER_LDFLAGS = "-licucore";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LFS.BriTv;
+				PRODUCT_NAME = BriTv;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_OBJC_GC = required;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "BriTv" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Brit TV GUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

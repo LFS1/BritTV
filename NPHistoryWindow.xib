@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NPHistoryTableViewController">
+            <connections>
+                <outlet property="window" destination="F0z-JX-Cv5" id="SA4-wr-gPC"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="New Programmes History" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" showsToolbarButton="NO" animationBehavior="default" id="F0z-JX-Cv5" userLabel="New Programmes History" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
+            <rect key="contentRect" x="490" y="311" width="567" height="539"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+            <view key="contentView" misplaced="YES" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="567" height="539"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="OIr-qN-I8b">
+                        <rect key="frame" x="20" y="22" width="527" height="421"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <clipView key="contentView" id="6by-dj-1bT">
+                            <rect key="frame" x="0.0" y="0.0" width="527" height="421"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="vuW-Ys-uXk" viewBased="YES" id="KMb-b6-4wT">
+                                    <rect key="frame" x="0.0" y="0.0" width="527" height="398"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <size key="intercellSpacing" width="3" height="2"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                    <tableColumns>
+                                        <tableColumn identifier="programmeNameString" editable="NO" width="437.66015625" minWidth="40" maxWidth="1000" id="qmY-Ca-Q4p">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Programme">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="hZX-1R-29g">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        </tableColumn>
+                                        <tableColumn identifier="networkNameString" width="83.453125" minWidth="10" maxWidth="3.4028234663852886e+38" id="qf4-6P-ZVz">
+                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Network">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </tableHeaderCell>
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="wW4-MD-1jq">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                        </tableColumn>
+                                    </tableColumns>
+                                    <connections>
+                                        <outlet property="dataSource" destination="xrI-VN-sTE" id="RBm-12-6In"/>
+                                    </connections>
+                                </tableView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="vsu-oJ-qQg">
+                            <rect key="frame" x="-100" y="-100" width="656" height="16"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Cc5-cV-Dys">
+                            <rect key="frame" x="-100" y="-100" width="15" height="102"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <tableHeaderView key="headerView" id="vuW-Ys-uXk">
+                            <rect key="frame" x="0.0" y="0.0" width="527" height="23"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </tableHeaderView>
+                    </scrollView>
+                    <button misplaced="YES" id="YHy-Ip-0LX">
+                        <rect key="frame" x="34" y="486" width="77" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="BBC One" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="PAN-2A-e6P">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeNewProgrmmeDisplayFilter:" target="mzw-jB-MrC" id="5kK-Hc-Ftq"/>
+                            <binding destination="vEM-N5-ttu" name="value" keyPath="values.BBCOne" id="289-fg-b2s"/>
+                        </connections>
+                    </button>
+                    <button misplaced="YES" id="H2R-lU-lMf">
+                        <rect key="frame" x="444" y="486" width="43" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="ITV" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ggg-k8-nvo">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeNewProgrmmeDisplayFilter:" target="mzw-jB-MrC" id="KzA-QX-gbI"/>
+                            <binding destination="vEM-N5-ttu" name="value" keyPath="values.ITV" id="4FW-gS-6rO"/>
+                        </connections>
+                    </button>
+                    <button misplaced="YES" id="52Z-jt-FO4">
+                        <rect key="frame" x="124" y="486" width="77" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="BBC Two" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="RZB-Oe-0TF">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeNewProgrmmeDisplayFilter:" target="mzw-jB-MrC" id="xGJ-ZN-ZU6"/>
+                            <binding destination="vEM-N5-ttu" name="value" keyPath="values.BBCTwo" id="3tt-mv-z0r"/>
+                        </connections>
+                    </button>
+                    <button misplaced="YES" id="gBs-sR-eQq">
+                        <rect key="frame" x="219" y="486" width="87" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="BBC Three" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="rhx-cw-2IK">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeNewProgrmmeDisplayFilter:" target="mzw-jB-MrC" id="lZP-MO-Rc0"/>
+                            <binding destination="vEM-N5-ttu" name="value" keyPath="values.BBCThree" id="KP6-lF-hdJ"/>
+                        </connections>
+                    </button>
+                    <button misplaced="YES" id="wbA-Wf-N5i">
+                        <rect key="frame" x="330" y="486" width="80" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="BBC Four" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="bRo-IL-5eb">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeNewProgrmmeDisplayFilter:" target="mzw-jB-MrC" id="pgu-Db-gDd"/>
+                            <binding destination="vEM-N5-ttu" name="value" keyPath="values.BBCFour" id="wXl-dO-Ehb"/>
+                        </connections>
+                    </button>
+                    <button misplaced="YES" id="KlG-JJ-vgd" userLabel="Ignore TV All News">
+                        <rect key="frame" x="34" y="457" width="341" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Ignore all TV programmes with &quot;news&quot; in the title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="GHw-ec-f89">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="changeNewProgrmmeDisplayFilter:" target="mzw-jB-MrC" id="4SO-bD-z1c"/>
+                            <binding destination="vEM-N5-ttu" name="value" keyPath="values.IgnoreAllTVNews" id="5mw-Q5-esP"/>
+                        </connections>
+                    </button>
+                    <box misplaced="YES" borderType="line" title="New Programmes Channel Filter" id="mRr-vK-Le0">
+                        <rect key="frame" x="17" y="449" width="656" height="74"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <view key="contentView" id="ZY6-rN-Tx7">
+                            <rect key="frame" x="1" y="1" width="654" height="58"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        </view>
+                    </box>
+                </subviews>
+            </view>
+            <point key="canvasLocation" x="168.5" y="341.5"/>
+        </window>
+        <customObject id="xrI-VN-sTE" customClass="NPHistoryTableViewController">
+            <connections>
+                <outlet property="historyTable" destination="KMb-b6-4wT" id="zXS-kb-hfU"/>
+            </connections>
+        </customObject>
+        <customObject id="mzw-jB-MrC" customClass="AppController"/>
+        <userDefaultsController representsSharedInstance="YES" id="vEM-N5-ttu"/>
+    </objects>
+</document>
