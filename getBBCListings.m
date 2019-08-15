@@ -102,12 +102,12 @@ extern  LogController *theLogger;
     
 	todayProgrammeArray = [[NSMutableArray alloc]init];
     
-    myQueueLeft +=  programmePages.count;
-    myQueueSize +=  programmePages.count;
+    myQueueLeft += programmePages.count;
+    myQueueSize += programmePages.count;
     
     /* Cycle through channels loading programme pages  */
 	
-	for (int i=0; i < programmePages.count; i++) {
+	for (int i=0; i < programmePages.count; i++) { 
         
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.bbc.co.uk/iplayer/a-z/%@", programmePages[i]]];
         
@@ -380,7 +380,7 @@ extern  LogController *theLogger;
             [scanner scanUpToString:@"availableSlices\":null}" intoString:NULL];
     
             if ( ![scanner isAtEnd] ) {
-                [self processBBCEpisodesNew:myProgramme :thePage :episodesURL];
+                [self processBBCEpisodesNew:myProgramme :thePage :episodesURL :@""];
                 // NSLog(@"@@Programme: %@ - No slices: %@", myProgramme.programmeName, brandId);
                 return;
             }
@@ -417,7 +417,7 @@ extern  LogController *theLogger;
                 [scanner scanUpToString:@"\"id\":\"" intoString:NULL];
 		
                 if ( numberSlices == 1 )  {
-                    [self processBBCEpisodesNew:myProgramme :thePage :episodesURL];
+                    [self processBBCEpisodesNew:myProgramme :thePage :episodesURL :sliceTitle];
                     // NSLog(@"Programme: %@ - process single slice: %@ Title: %@", myProgramme.programmeName, seriesId, sliceTitle);
                 }
                 else {
@@ -445,7 +445,7 @@ extern  LogController *theLogger;
                         	NSString *thePage = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                         	thePage = [thePage stringByDecodingHTMLEntities];
                         	// NSLog(@"Programme: %@ - process Multiple slice: %@ Title: %@ - %@", myProgramme.programmeName, seriesId, sliceTitle, episodesPageURL);
-                        	[self processBBCEpisodesNew:myProgramme :thePage :episodesPageURL];
+                            [self processBBCEpisodesNew:myProgramme :thePage :episodesPageURL :sliceTitle];
 						}
                     }] resume];
                 }
@@ -457,7 +457,7 @@ extern  LogController *theLogger;
 }
 
 
--(void)processBBCEpisodesNew:(ProgrammeData *)theProgramme :(NSString *)thePage :(NSURL *)theURL
+-(void)processBBCEpisodesNew:(ProgrammeData *)theProgramme :(NSString *)thePage :(NSURL *)theURL :(NSString *)sliceTitle
 {
 	/*  Scan through episode page and create carried forward programme entries for each eipsode of aProgramme */
 	
@@ -491,58 +491,65 @@ extern  LogController *theLogger;
 	if ( episodesThisPage > episodesPerPage )
 		episodesThisPage = episodesPerPage;
 
-	[scanner setScanLocation:0];
+	[scanner setScanLocation:1];
 
 	/* loop through the page and pull out each programme */
 	
-	[scanner scanUpToString:@"href=\"/iplayer/episode/" intoString:NULL];
+    [scanner scanUpToString:@"\"props\":{" intoString:NULL];
 	
 	while ( (![scanner isAtEnd]) ) {
-		[scanner scanString:@"href=\"/iplayer/episode/" intoString:NULL];
+        
+        episodesFound++;
+        
+        [scanner scanString:@"\"props\":{"  intoString:NULL];
+        
+        /* Try to get Episode Name - we need to get the token and see what it is */
+        
+        episodeName = @"";
+        
+        if  ( [scanner scanString:@"\"title\":\"" intoString:NULL]  )
+            [scanner scanUpToString:@"\"" intoString:&episodeName];
+        
+        episodeName = [episodeName stringByAppendingString:@" "];
+        episodeName = [episodeName stringByAppendingString:sliceTitle];
+        
+        /* Get Image File Name */
+        
+        NSString *imageFileName = NULL;
+        NSURL    *imageURL = NULL;
+        
+        [scanner scanUpToString:@"https://ichef.bbci.co.uk/images/ic/" intoString:NULL];
+        [scanner scanString:@"https://ichef.bbci.co.uk/images/ic/" intoString:NULL];
+        [scanner scanUpToString:@"/" intoString:NULL];
+        [scanner scanString:@"/" intoString:NULL];
+        [scanner scanUpToString:@".jpg" intoString:&imageFileName];
+        
+        if (imageFileName) {
+            imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://ichef.bbci.co.uk/images/ic/192x108/%@.jpg", imageFileName]];
+        }
+        else {
+            NSString *reason = [NSString stringWithFormat:@"Getting episode detailes: ccould not get image filename for %@", theProgramme.programmeName];
+            [self reportProcessingError:theURLString andWithREASON:reason];
+            [scanner scanUpToString:@"\"props\":{"  intoString:NULL];
+            continue;
+        }
 		
 		/* Find Production ID (Required) & create programme URL */
-		
-		productionId = @"";
+        
+        productionId = @"";
+        [scanner scanUpToString:@"href\":\"/iplayer/episode/" intoString:NULL];
+        [scanner scanString:@"href\":\"/iplayer/episode/" intoString:NULL];
+        
 		[scanner scanUpToString:@"/" intoString:&productionId];
 		
 		if ( productionId.length == 0 )	{
             NSString *reason = [NSString stringWithFormat:@"Getting episode detailes: could not find production id for %@", theProgramme.programmeName];
 			[self reportProcessingError:theURLString andWithREASON:reason];
-			[scanner scanUpToString:@"href=\"/iplayer/episode/"  intoString:NULL];
+            [scanner scanUpToString:@"\"props\":{"    intoString:NULL];
 			continue;
 		}
-		
-		/* Get Image File Name */
-		
-		NSString *imageFileName = NULL;
-		NSURL    *imageURL = NULL;
-		
-		[scanner scanUpToString:@"https://ichef.bbci.co.uk/images/ic/" intoString:NULL];
-		[scanner scanString:@"https://ichef.bbci.co.uk/images/ic/" intoString:NULL];
-		[scanner scanUpToString:@"/" intoString:NULL];
-		[scanner scanString:@"/" intoString:NULL];
-		[scanner scanUpToString:@".jpg" intoString:&imageFileName];
-		
-        if (imageFileName) {
-			imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://ichef.bbci.co.uk/images/ic/192x108/%@.jpg", imageFileName]];
-        }
-        else {
-            NSString *reason = [NSString stringWithFormat:@"Getting episode detailes: ccould not get image filename for %@", theProgramme.programmeName];
-            [self reportProcessingError:theURLString andWithREASON:reason];
-            [scanner scanUpToString:@"href=\"/iplayer/episode/"  intoString:NULL];
-            continue;
-        }
-		
-		/* Episode Name */
-		
-		episodeName = @"";
-		[scanner scanUpToString:@"<div class=\"content-item__title typo typo--skylark typo--bold\">" intoString:NULL];
-		[scanner scanString:@"<div class=\"content-item__title typo typo--skylark typo--bold\">" intoString:NULL];
-		[scanner scanUpToString:@"</div>" intoString:&episodeName];
-		
+
 		/* Create ProgrammeData Object and store in array */
-		
-		episodesFound++;
 		
 		ProgrammeData *myProgramme = [[ProgrammeData alloc]initWithName:theProgramme.programmeName andChannel:theProgramme.tvNetwork andPID:productionId andURL:@"" andNUMBEREPISODES:theProgramme.numberEpisodes];
 		
@@ -563,9 +570,13 @@ extern  LogController *theLogger;
 		
 		/* Scan for next programme */
 		
-		[scanner scanUpToString:@"href=\"/iplayer/episode/"  intoString:NULL];
-		
+        [scanner scanUpToString:@"\"props\":{"    intoString:NULL];
+        
+        NSLog(@"%@ - S:%d - %@ - %@", myProgramme.programmeName, myProgramme.seriesNumber, myProgramme.episodeName, myProgramme.productionId);
 	}
+    
+    if (  episodesFound  != episodesThisPage)
+        [self reportProcessingError:[NSString stringWithFormat:@"%@", theURL] andWithREASON:[NSString stringWithFormat:@"Warning: episodes expected/found do not match (%d/%d) - processing those that were found", episodesThisPage, episodesFound]];
 	
 	/* Check if there is any outstanding work before processing the carried forward programme list */
     

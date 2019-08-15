@@ -363,8 +363,8 @@ extern  LogController *theLogger;
 {
 	
 	title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-	
-	if  ( ![title length] ) {
+        
+	if  ( ![title length]  ) {
 		[self makeEpisodeName];
 		return;
 	}
