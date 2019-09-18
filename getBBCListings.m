@@ -572,7 +572,7 @@ extern  LogController *theLogger;
 		
         [scanner scanUpToString:@"\"props\":{"    intoString:NULL];
         
-        NSLog(@"%@ - S:%d - %@ - %@", myProgramme.programmeName, myProgramme.seriesNumber, myProgramme.episodeName, myProgramme.productionId);
+        // NSLog(@"%@ - S:%d - %@ - %@", myProgramme.programmeName, myProgramme.seriesNumber, myProgramme.episodeName, myProgramme.productionId);
 	}
     
     if (  episodesFound  != episodesThisPage)

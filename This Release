@@ -1,4 +1,5 @@
-Hotfix-001
-    Update to how BBC website lists episdode data - fixed to get BBC listings / get episode data to support
-    Added slice title in to episode name so that BBC box sets now have the correct series number
+Added
+    Support got get-iPlayer.pl for BBC
+    Auto pilot mode to run every x hours with auto restart if failed download count exceeds x
+
 

@@ -17,6 +17,7 @@
 #import "AppController.h"
 #import "ProgrammeCache.h"
 #import "YoutubeDLDownload.h"
+#import "GetiPlayerDownload.h"
 #import "SeriesLink.h"
 #import "DownloadHistoryEntry.h"
 
@@ -64,6 +65,9 @@ LogController *theLogger;
     defaultValues[@"DefaultBrowser"] = @"Safari";
     defaultValues[@"CacheBBC_TV"] = @YES;
     defaultValues[@"CacheITV_TV"] = @YES;
+    defaultValues[@"GetiPlayer"] = @NO;
+    defaultValues[@"AutoPilotHours"] = @"0";
+    defaultValues[@"AutoPilotAbandonCount"] = @"10";
     defaultValues[@"CacheExpiryTime"] = @"1";
 	defaultValues[@"numberConcurrentITVDownloads"] = @"1";
 	defaultValues[@"numberConcurrentBBCDownloads"] = @"1";
@@ -106,6 +110,12 @@ LogController *theLogger;
 	forceBBCUpdateInProgress = NO;
 	
 	sharedProgrammeCacheController = [ProgrammeCache sharedInstance];
+    
+    autoStartMinuteCount = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotHours"] intValue]*3600;
+    autoStartMinuteOutlet.stringValue = [NSString stringWithFormat:@"%d", autoStartMinuteCount];
+    autoPilot = false;
+    autoPilotSleepDisabled = false;
+    
 	
     return self;
 }
@@ -169,7 +179,74 @@ LogController *theLogger;
     }
 	
     [self updateCache:nil];
+    
+    /* Set auto restart timer counts */
+    
+    autoStartSuccessCount = autoStartFailCount = autoStartFailCountBF = 0;
+    downloadSuccessCountOutlet.stringValue = @"None";
+    downloadFailCountOutlet.stringValue = @"None";
+    
+    if  ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotHours"] intValue]) {
+        autoPilotTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                          target:self
+                                                        selector:@selector(updateAutoStart)
+                                                        userInfo:nil
+                                                         repeats:YES];
+        
+        autoPilotSleepDisabled = true;
+        
+        IOPMAssertionCreateWithDescription(kIOPMAssertionTypePreventUserIdleSystemSleep, (CFStringRef)@"Downloading Show", (CFStringRef)@"BriTV is in Autopilot mode.", NULL, NULL, (double)0, NULL, &powerAssertionID);
+    }
 }
+-(void)updateAutoStart
+{
+    autoStartMinuteOutlet.stringValue = [NSString stringWithFormat:@"%d", --autoStartMinuteCount];
+    
+    if (autoStartMinuteCount > 3500)
+        return;
+    
+    autoStartMinuteCount = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotHours"] intValue]*3600;
+    
+    if (runDownloads || runUpdate )
+        return;
+
+    int failsThisCycle = autoStartFailCount - autoStartFailCountBF;
+    int maxFailsAllowed = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotAbandonCount"] intValue];
+    
+    if ( failsThisCycle >  maxFailsAllowed )
+    {
+        [autoPilotTimer invalidate];
+        autoStartMinuteOutlet.stringValue = @"Off";
+        autoPilot = false;
+        IOPMAssertionRelease(powerAssertionID);
+        autoPilotSleepDisabled = false;
+        return;
+    }
+    
+    autoPilot = true;
+    autoStartFailCountBF = autoStartFailCount;
+    
+    [self forceUpdate:nil];
+    
+}
+-(void) reStart
+{
+    NSString *killArg1AndOpenArg2Script = @"kill -9 $1 \n open \"$2\"";
+    NSString *ourPID = [NSString stringWithFormat:@"%d",[[NSProcessInfo processInfo] processIdentifier]];
+    NSString *pathToUs = [[NSBundle mainBundle] bundlePath];
+    NSArray *shArgs = [NSArray arrayWithObjects:@"-c",
+                       killArg1AndOpenArg2Script,
+                       @"",
+                       ourPID,
+                       pathToUs,
+                       nil];
+    
+    NSTask *restartTask = [NSTask launchedTaskWithLaunchPath:@"/bin/sh" arguments:shArgs];
+    
+    [restartTask waitUntilExit]; //wait for killArg1AndOpenArg2Script to finish
+    
+}
+
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)application
 {
     return YES;
@@ -374,6 +451,9 @@ LogController *theLogger;
 	
 	if ( [[_solutionsArrayController arrangedObjects]count] )
 		[solutionsWindow makeKeyAndOrderFront:self];
+    
+    if (autoPilot) 
+        [self startDownloads:nil];
 	
 }
 - (IBAction)forceUpdate:(id)sender
@@ -651,13 +731,18 @@ LogController *theLogger;
 	
 	if (!foundOne)
 	{
-        NSAlert *noShowAlert = [[NSAlert alloc]init];
-        noShowAlert.messageText = @"No Shows in Queue!";
-        noShowAlert.informativeText = @"Try adding shows to the queue before clicking start; ";
-		[noShowAlert runModal];
+        if ( !autoPilot ) {
+            NSAlert *noShowAlert = [[NSAlert alloc]init];
+            noShowAlert.messageText = @"No Shows in Queue!";
+            noShowAlert.informativeText = @"Try adding shows to the queue before clicking start; ";
+            [noShowAlert runModal];
+        }
+        autoPilot = false;
 		return;
 	}
-	
+    
+    autoPilot = false;
+    
 	if ( [[_solutionsArrayController arrangedObjects] count] )
 			[_solutionsArrayController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [_solutionsArrayController.arrangedObjects count])]];
 
@@ -665,12 +750,15 @@ LogController *theLogger;
 	numberOfITVDownloadsRunning = 0;
 	numberOfBBCDownloadsRunning = 0;
 	downloadNumber   = 0;
+    autoStartMinuteCount = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotHours"] intValue]*3600;
 	[mainWindow setDocumentEdited:YES];
 	[stopButton setEnabled:YES];
 	[startButton setEnabled:NO];
 
 	[logger addToLog:@"\rAppController: Starting Downloads" :nil];
-	IOPMAssertionCreateWithDescription(kIOPMAssertionTypePreventUserIdleSystemSleep, (CFStringRef)@"Downloading Show", (CFStringRef)@"GiA is downloading shows.", NULL, NULL, (double)0, NULL, &powerAssertionID);
+    
+    if (!autoPilotSleepDisabled)
+        IOPMAssertionCreateWithDescription(kIOPMAssertionTypePreventUserIdleSystemSleep, (CFStringRef)@"Downloading Show", (CFStringRef)@"BriTv is downloading shows.", NULL, NULL, (double)0, NULL, &powerAssertionID);
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nextDownload:) name:@"DownloadFinished" object:nil];
             
@@ -682,18 +770,22 @@ LogController *theLogger;
 		{
 			if ( numberOfITVDownloadsRunning < [[[NSUserDefaults standardUserDefaults] objectForKey:@"numberConcurrentITVDownloads"] intValue])
 			{
+                numberOfITVDownloadsRunning++;
 				[self makeProgrammeUnderway:show];
 				[downloadTasksArray addObject:[[YoutubeDLDownload alloc] initWithProgramme:show downloadNumber:++downloadNumber]];
-					numberOfITVDownloadsRunning++;
 			}
 		}
 		else if ([[show tvNetwork] hasPrefix:@"BBC"])
 		{
 			if ( numberOfBBCDownloadsRunning < [[[NSUserDefaults standardUserDefaults] objectForKey:@"numberConcurrentBBCDownloads"] intValue])
 			{
+                numberOfBBCDownloadsRunning++;
 				[self makeProgrammeUnderway:show];
-				[downloadTasksArray addObject:[[YoutubeDLDownload  alloc] initWithProgramme:show downloadNumber:++downloadNumber]];
-				numberOfBBCDownloadsRunning++;
+                
+                if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"GetiPlayer"] boolValue])
+                    [downloadTasksArray addObject:[[YoutubeDLDownload  alloc] initWithProgramme:show downloadNumber:++downloadNumber]];
+                else
+                    [downloadTasksArray addObject:[[GetiPlayerDownload  alloc] initWithProgramme:show downloadNumber:++downloadNumber]];
 			}
 		}
 	}
@@ -708,7 +800,8 @@ LogController *theLogger;
 }
 - (IBAction)stopDownloads:(id)sender
 {
-    IOPMAssertionRelease(powerAssertionID);
+    if (!autoPilotSleepDisabled)
+        IOPMAssertionRelease(powerAssertionID);
     
     runDownloads=NO;
 	
@@ -757,6 +850,10 @@ LogController *theLogger;
 	if ( finishedShow.downloadStatus == FinishedOK )
 	{
 		[finishedShow setValue:@"Download Complete" forKey:@"status"];
+        autoStartSuccessCount++;
+        downloadSuccessCountOutlet.stringValue = [NSString stringWithFormat:@"%d", autoStartSuccessCount];
+        
+        [NSString  stringWithFormat:@"%d", autoStartSuccessCount];
             
 		@try
 		{
@@ -775,6 +872,9 @@ LogController *theLogger;
 	}
 	else
 	{
+        autoStartFailCount++;
+        downloadFailCountOutlet.stringValue = [NSString stringWithFormat:@"%d", autoStartFailCount];
+        
 		@try
 		{
 			[GrowlApplicationBridge notifyWithTitle:@"Download Failed"
@@ -815,20 +915,25 @@ LogController *theLogger;
 		{
 			if ( numberOfITVDownloadsRunning < [[[NSUserDefaults standardUserDefaults] objectForKey:@"numberConcurrentITVDownloads"] intValue])
 			{
+                numberOfITVDownloadsRunning++;
+                [logger addToLog:[NSString stringWithFormat:@"\rDownloading Show %@", nextShow.shortEpisodeName] :nil];
 				[self makeProgrammeUnderway:nextShow];
 				[downloadTasksArray addObject:[[YoutubeDLDownload  alloc] initWithProgramme:nextShow downloadNumber:++downloadNumber]];
-				numberOfITVDownloadsRunning++;
-				[logger addToLog:[NSString stringWithFormat:@"\rDownloading Show %@", nextShow.shortEpisodeName] :nil];
 			}
 		}
 		else if ([[nextShow tvNetwork] hasPrefix:@"BBC"])
 		{
 			if ( numberOfBBCDownloadsRunning < [[[NSUserDefaults standardUserDefaults] objectForKey:@"numberConcurrentBBCDownloads"] intValue])
 			{
+                numberOfBBCDownloadsRunning++;
+                [logger addToLog:[NSString stringWithFormat:@"\rDownloading Show %@", nextShow.shortEpisodeName] :nil];
 				[self makeProgrammeUnderway:nextShow];
-				[downloadTasksArray addObject:[[YoutubeDLDownload  alloc] initWithProgramme:nextShow downloadNumber:++downloadNumber]];
-				numberOfBBCDownloadsRunning++;
-				[logger addToLog:[NSString stringWithFormat:@"\rDownloading Show %@", nextShow.shortEpisodeName] :nil];
+                
+                if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"GetiPlayer"] boolValue])
+                    [downloadTasksArray addObject:[[YoutubeDLDownload  alloc] initWithProgramme:nextShow downloadNumber:++downloadNumber]];
+                else
+                    [downloadTasksArray addObject:[[GetiPlayerDownload  alloc] initWithProgramme:nextShow downloadNumber:++downloadNumber]];
+
 			}
 		}
 	}
@@ -836,7 +941,9 @@ LogController *theLogger;
 	if (numberOfBBCDownloadsRunning == 0 && numberOfITVDownloadsRunning == 0)
 	{
 		//Downloads must be finished.
-		IOPMAssertionRelease(powerAssertionID);
+        
+        if (!autoPilotSleepDisabled)
+            IOPMAssertionRelease(powerAssertionID);
             
 		[stopButton setEnabled:NO];
 		[startButton setEnabled:YES];
@@ -1103,6 +1210,9 @@ LogController *theLogger;
     [sharedDefaults removeObjectForKey:@"DefaultBrowser"];
     [sharedDefaults removeObjectForKey:@"CacheBBC_TV"];
     [sharedDefaults removeObjectForKey:@"CacheITV_TV"];
+    [sharedDefaults removeObjectForKey:@"GetiPlayer"];
+    [sharedDefaults removeObjectForKey:@"AutoPilotHours"];
+    [sharedDefaults removeObjectForKey:@"AutoPilotAbandonCount"];
     [sharedDefaults removeObjectForKey:@"CacheExpiryTime"];
 	[sharedDefaults removeObjectForKey:@"numberConcurrentITVDownloads"];
 	[sharedDefaults removeObjectForKey:@"numberConcurrentBBCDownloads"];

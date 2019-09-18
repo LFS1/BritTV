@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/LFS/Dropbox/Development/Objective C/Get-iPlayer-Automator-Lite-Reference/Brit TV GUI.xcodeproj">
+      location = "group:/Users/LFS/Documents/BritTV/AtomicParsley">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/LFS/Documents/BritTV/Binaries/get_iplayer.pl">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>

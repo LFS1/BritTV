@@ -116,7 +116,21 @@
 	
 	NewProgrammeHistory           *sharedHistoryController;
 	ProgrammeCache				  *sharedProgrammeCacheController;
-
+    
+    // Autostart controlls
+    
+    int autoStartMinuteCount;
+    int autoStartSuccessCount;
+    int autoStartFailCount;
+    int autoStartFailCountBF;
+    NSTimer *autoPilotTimer;
+    
+    BOOL autoPilot;
+    BOOL autoPilotSleepDisabled;
+    
+    IBOutlet NSTextField *downloadFailCountOutlet;
+    IBOutlet NSTextField *downloadSuccessCountOutlet;
+    IBOutlet NSTextField *autoStartMinuteOutlet;
 }
 
 @property   IBOutlet NSProgressIndicator *itvProgressIndicator;
@@ -157,6 +171,7 @@
 -(void)updateHistoryForType:(NSString *)chanelType andBFFile:(NSString *)bfFile andCFFile:(NSString *)cfFile;
 -(void)itvUpdateFinished;
 -(void)forceITVUpdateFinished;
+-(void)updateAutoStart;
 
 @end
 

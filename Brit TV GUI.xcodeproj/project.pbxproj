@@ -48,9 +48,13 @@
 		DFC865E213E96BE200606599 /* ReasonForFailure.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC865E113E96BE200606599 /* ReasonForFailure.m */; };
 		DFFF196713E96288007B52AC /* ReasonsForFailure.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFFF196613E96288007B52AC /* ReasonsForFailure.plist */; };
 		E3506C44224579CB004A964B /* rtmpdump in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3506C3F2245797E004A964B /* rtmpdump */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		E3D077812260FBA600BC0BE2 /* ffmpeg in Resources */ = {isa = PBXBuildFile; fileRef = E3D077802260FBA500BC0BE2 /* ffmpeg */; };
 		E3D077832260FC0F00BC0BE2 /* ffmpeg in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D077802260FBA500BC0BE2 /* ffmpeg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E3D077842260FC1600BC0BE2 /* youtube-dl in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D077822260FBFA00BC0BE2 /* youtube-dl */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		E3D3404B232AD439008C1C60 /* GetiPlayerDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D3404A232AD439008C1C60 /* GetiPlayerDownload.m */; };
+		E3D34053232D6D95008C1C60 /* AtomicParsley in Resources */ = {isa = PBXBuildFile; fileRef = E3D34052232D6D95008C1C60 /* AtomicParsley */; };
+		E3D34055232D6DB5008C1C60 /* get_iplayer.pl in Resources */ = {isa = PBXBuildFile; fileRef = E3D34054232D6DB5008C1C60 /* get_iplayer.pl */; };
+		E3D34057232D6F55008C1C60 /* perl5 in Resources */ = {isa = PBXBuildFile; fileRef = E3D34056232D6F55008C1C60 /* perl5 */; };
+		E3D34058232D6F75008C1C60 /* AtomicParsley in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D34052232D6D95008C1C60 /* AtomicParsley */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -60,6 +64,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				E3D34058232D6F75008C1C60 /* AtomicParsley in CopyFiles */,
 				E3D077842260FC1600BC0BE2 /* youtube-dl in CopyFiles */,
 				E3D077832260FC0F00BC0BE2 /* ffmpeg in CopyFiles */,
 				E3506C44224579CB004A964B /* rtmpdump in CopyFiles */,
@@ -153,6 +158,11 @@
 		E3506C3F2245797E004A964B /* rtmpdump */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = rtmpdump; sourceTree = "<group>"; };
 		E3D077802260FBA500BC0BE2 /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ffmpeg; sourceTree = "<group>"; };
 		E3D077822260FBFA00BC0BE2 /* youtube-dl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "youtube-dl"; sourceTree = "<group>"; };
+		E3D34049232AD439008C1C60 /* GetiPlayerDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetiPlayerDownload.h; sourceTree = "<group>"; };
+		E3D3404A232AD439008C1C60 /* GetiPlayerDownload.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetiPlayerDownload.m; sourceTree = "<group>"; };
+		E3D34052232D6D95008C1C60 /* AtomicParsley */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = AtomicParsley; sourceTree = "<group>"; };
+		E3D34054232D6DB5008C1C60 /* get_iplayer.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = get_iplayer.pl; sourceTree = "<group>"; };
+		E3D34056232D6F55008C1C60 /* perl5 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = perl5; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -270,9 +280,12 @@
 		D904F04D1009F28400D60BBF /* Binaries */ = {
 			isa = PBXGroup;
 			children = (
+				E3D34056232D6F55008C1C60 /* perl5 */,
+				E3D34052232D6D95008C1C60 /* AtomicParsley */,
 				E3D077802260FBA500BC0BE2 /* ffmpeg */,
 				E3D077822260FBFA00BC0BE2 /* youtube-dl */,
 				E3506C3F2245797E004A964B /* rtmpdump */,
+				E3D34054232D6DB5008C1C60 /* get_iplayer.pl */,
 			);
 			path = Binaries;
 			sourceTree = "<group>";
@@ -307,6 +320,8 @@
 				BF42A19C212B386300437746 /* DisplayDateTransformer.m */,
 				BF582899201E31AC00EFEC3F /* YoutubeDLDownload.h */,
 				BF582897201E317C00EFEC3F /* YoutubeDLDownload.m */,
+				E3D34049232AD439008C1C60 /* GetiPlayerDownload.h */,
+				E3D3404A232AD439008C1C60 /* GetiPlayerDownload.m */,
 				D9178593101345D700B82736 /* SeriesLink.h */,
 				D9178594101345D700B82736 /* SeriesLink.m */,
 				D92687C81087F836000E8132 /* DownloadHistoryEntry.h */,
@@ -379,7 +394,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1030;
 				TargetAttributes = {
 					8D1107260486CEB800E47090 = {
 						DevelopmentTeam = 2C26AD8SGU;
@@ -409,14 +424,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3D34053232D6D95008C1C60 /* AtomicParsley in Resources */,
 				39FD5E9619D370BD006BC47B /* Images.xcassets in Resources */,
+				E3D34055232D6DB5008C1C60 /* get_iplayer.pl in Resources */,
 				396FDA611DA98179003F3F57 /* MainMenu.xib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				BF065A3E1EE0669C00F54636 /* This Release in Resources */,
 				D9CCF54C1025AAF9009205BE /* Growl Registration Ticket.growlRegDict in Resources */,
-				E3D077812260FBA600BC0BE2 /* ffmpeg in Resources */,
 				BF382EE31D73C36300BAF106 /* NPHistoryWindow.xib in Resources */,
 				D9A4509D102FF8090011E175 /* Credits.html in Resources */,
+				E3D34057232D6F55008C1C60 /* perl5 in Resources */,
 				D9A450A4102FFDC00011E175 /* LICENSE.txt in Resources */,
 				DFFF196713E96288007B52AC /* ReasonsForFailure.plist in Resources */,
 			);
@@ -459,6 +476,7 @@
 				39D52EA81DAAFD450033C4ED /* NPHistoryWindowController.m in Sources */,
 				BF065A441EE5FEB300F54636 /* DownloadHistoryCache.m in Sources */,
 				393D1DEE18A5BBB500F27880 /* RSRTVArrayController.m in Sources */,
+				E3D3404B232AD439008C1C60 /* GetiPlayerDownload.m in Sources */,
 				39D7C1BD1874AD7400B78698 /* StringTrimFormatter.m in Sources */,
 				D9F97FEC198EBA94006494A3 /* NSFileManager+DirectoryLocations.m in Sources */,
 				BFA3B40E1EB53CBE0047FFEB /* getBBCListings.m in Sources */,
