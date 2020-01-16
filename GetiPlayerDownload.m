@@ -128,18 +128,6 @@ extern  LogController *theLogger;
     if (episodeNumber)
         show.episodeNumber = episodeNumber;
     
-    /* title */
-    
-    NSString *episodeTitle = @"";
-    [scanner scanUpToString:@"title\":\"" intoString:NULL];
-    [scanner scanString:@"title\":\"" intoString:NULL];
-    [scanner scanUpToString:@"\"" intoString:&episodeTitle];
-    
-    if (episodeTitle.length) {
-        episodeTitle = [episodeTitle stringByReplacingOccurrencesOfString:@"\\"  withString:@""];
-        [show analyseTitle:episodeTitle];
-    }
-    
     // Broadcast date: 2018-03-08T19:30:00Z */
     
     NSString *dateAiredString = @"";

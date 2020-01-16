@@ -102,15 +102,15 @@ extern  LogController *theLogger;
     
 	todayProgrammeArray = [[NSMutableArray alloc]init];
     
-    myQueueLeft += programmePages.count;
-    myQueueSize += programmePages.count;
+	myQueueLeft += programmePages.count;
+	myQueueSize += programmePages.count;
     
     /* Cycle through channels loading programme pages  */
+
+	for (int i=0; i < programmePages.count; i++) {
 	
-	for (int i=0; i < programmePages.count; i++) { 
-        
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.bbc.co.uk/iplayer/a-z/%@", programmePages[i]]];
-        
+		
         [[mySession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			
 			pagesRead++;
@@ -229,8 +229,6 @@ extern  LogController *theLogger;
 		
         myProgramme.programmeURL = [NSString stringWithFormat:@"https://www.bbc.co.uk/iplayer/episode/%@", productionId];
         myProgramme.forceCacheUpdate = forceUpdate;
-        [myProgramme makeEpisodeName];
-        
 		
         [todayProgrammeArray addObject:myProgramme];
             
@@ -242,7 +240,7 @@ extern  LogController *theLogger;
     if (  programmesFound  != numberProgrammes )
 		[self reportProcessingError:[NSString stringWithFormat:@"%@", theURL] andWithREASON:[NSString stringWithFormat:@"Warning: Programmes expected/found do not match (%d/%d)", numberProgrammes, programmesFound]];
     
-    if (!myQueueLeft)
+	if (!myQueueLeft)
         [self mergeAllProgrammes];
     
 }
@@ -572,7 +570,7 @@ extern  LogController *theLogger;
 		
         [scanner scanUpToString:@"\"props\":{"    intoString:NULL];
         
-        // NSLog(@"%@ - S:%d - %@ - %@", myProgramme.programmeName, myProgramme.seriesNumber, myProgramme.episodeName, myProgramme.productionId);
+        //NSLog(@"%@ - S:%d - %@ - %@", myProgramme.programmeName, myProgramme.seriesNumber, myProgramme.episodeName, myProgramme.productionId);
 	}
     
     if (  episodesFound  != episodesThisPage)

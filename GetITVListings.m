@@ -159,116 +159,162 @@ extern  LogController *theLogger;
 	
     /*  Scan through episode page and create carried forward programme entries for each eipsode of aProgramme */
 
-    NSScanner *scanner = [NSScanner scannerWithString:myHtmlData];
-    NSScanner *fullProgrammeScanner;
-    NSString *fullProgramme = nil;
-    NSUInteger scanPoint   = 0;
-    int numberEpisodesFound = 0;
-    NSString *temp = nil;
-
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    
-    /* Get first episode  */
-
-	[scanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
-    [scanner scanUpToString:@"</li>" intoString:&fullProgramme];
-
-    while ( ![scanner isAtEnd] ) {
-        
-        fullProgrammeScanner = [NSScanner scannerWithString:fullProgramme];
-		
-        /* URL & Prodiction ID */
-        
-        NSString *programmeURL;
-        
-        [fullProgrammeScanner scanUpToString:@"<a href=\"" intoString:&temp];
-        [fullProgrammeScanner scanString:@"<a href=\"" intoString:&temp];
-		[fullProgrammeScanner scanUpToString:@"\"" intoString:&programmeURL];
-        
-        if ( !programmeURL )  {
-            NSString *reason = [NSString stringWithFormat:@"Could not get episode URL for programme %@ - Ignoring", aProgramme.programmeName];
-            [self reportProcessingError:aProgramme.programmeURL andWithREASON:reason];
-            
-            [scanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
-            [scanner scanUpToString:@"</li>" intoString:&fullProgramme];
-            
-            continue;
-        }
-		
-        NSString *productionId;
-        
-		productionId = [[programmeURL componentsSeparatedByString:@"/"]lastObject];
-        
-        if ( !productionId )  {
-            NSString *reason = [NSString stringWithFormat:@"Could not get production id for programme %@ URL %@- Ignoring", aProgramme.programmeName, programmeURL];
-            [self reportProcessingError:aProgramme.programmeURL andWithREASON:reason];
-            
-            [scanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
-            [scanner scanUpToString:@"</li>" intoString:&fullProgramme];
-            
-            continue;
-        }
-        
-		
-		/* Check that this is the correct programme as sometimes other programmes are included on the page */
-		
-        if ( [self programmeNameInURLIsEqual:programmeURL :aProgramme.programmeURL] == false ) {
-            [scanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
-            [scanner scanUpToString:@"</li>" intoString:&fullProgramme];
-            
-            continue;
-        }
+	NSScanner *fullPageScanner = [NSScanner scannerWithString:myHtmlData];
+	int numberEpisodesFound = 0;
 	
-		/* Episode Title  */
+	/* look for series numbers - if found get all data for the next series else get all data */
+	
+	NSString *seriesString;
+	NSString *fullSeriesString;
+	
+	[fullPageScanner scanUpToString:@"episode-list-" intoString:NULL];
+	[fullPageScanner scanString:@"episode-list-" intoString:NULL];
+	[fullPageScanner scanUpToString:@"\"" intoString:&seriesString];
+	
+	int seriesNumber = 0;
+	
+	NSScanner *seriesNumberScanner;
+	
+	if ( [seriesString containsString:@"s"]) {
+		seriesNumberScanner = [NSScanner scannerWithString:seriesString];
+		[seriesNumberScanner scanUpToString:@"s" intoString:NULL];
+		[seriesNumberScanner scanString:@"s" intoString:NULL];
+		[seriesNumberScanner scanInt:&seriesNumber];
+	}
+	
+	[fullPageScanner scanUpToString:@"/section" intoString:&fullSeriesString];
+	
+	while ( ![fullPageScanner isAtEnd] ) {
+
+		NSScanner *fullSeriesScanner = [NSScanner scannerWithString:fullSeriesString];
 		
-		NSString *title = @"";
+		NSScanner *fullProgrammeScanner;
+		NSString *fullProgramme = nil;
+		NSUInteger scanPoint   = 0;
+		NSString *temp = nil;
+
+		/* Get first episode  */
+
+		[fullSeriesScanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
+		[fullSeriesScanner scanUpToString:@"</li>" intoString:&fullProgramme];
+
+		while ( ![fullSeriesScanner isAtEnd] ) {
+        
+			fullProgrammeScanner = [NSScanner scannerWithString:fullProgramme];
 		
-		[fullProgrammeScanner scanUpToString:@"<h3 class=\"tout__title complex-link__target theme__target \">" intoString:NULL];
-		[fullProgrammeScanner scanString:@"<h3 class=\"tout__title complex-link__target theme__target \">" intoString:NULL];
-		[fullProgrammeScanner scanUpToString:@"<"  intoString:&title];
+			/* URL & Prodiction ID */
+        
+			NSString *programmeURL;
+        
+			[fullProgrammeScanner scanUpToString:@"<a href=\"" intoString:&temp];
+			[fullProgrammeScanner scanString:@"<a href=\"" intoString:&temp];
+			[fullProgrammeScanner scanUpToString:@"\"" intoString:&programmeURL];
+        
+			if ( !programmeURL )  {
+				NSString *reason = [NSString stringWithFormat:@"Could not get episode URL for programme %@ - Ignoring", aProgramme.programmeName];
+				[self reportProcessingError:aProgramme.programmeURL andWithREASON:reason];
+            
+				[fullSeriesScanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
+				[fullSeriesScanner scanUpToString:@"</li>" intoString:&fullProgramme];
+            
+				continue;
+			}
+		
+			NSString *productionId;
+        
+			productionId = [[programmeURL componentsSeparatedByString:@"/"]lastObject];
+        
+			if ( !productionId )  {
+				NSString *reason = [NSString stringWithFormat:@"Could not get production id for programme %@ URL %@- Ignoring", aProgramme.programmeName, programmeURL];
+				[self reportProcessingError:aProgramme.programmeURL andWithREASON:reason];
+            
+				[fullSeriesScanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
+				[fullSeriesScanner scanUpToString:@"</li>" intoString:&fullProgramme];
+            
+				continue;
+			}
+        
+		
+			/* Check that this is the correct programme as sometimes other programmes are included on the page */
+		
+			if ( [self programmeNameInURLIsEqual:programmeURL :aProgramme.programmeURL] == false ) {
+				[fullSeriesScanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
+				[fullSeriesScanner scanUpToString:@"</li>" intoString:&fullProgramme];
+            
+				continue;
+			}
+	
+			/* Episode Title  */
+		
+			NSString *title = @"";
+		
+			[fullProgrammeScanner scanUpToString:@"<h3 class=\"tout__title complex-link__target theme__target\">" intoString:NULL];
+			[fullProgrammeScanner scanString:@"<h3 class=\"tout__title complex-link__target theme__target\">" intoString:NULL];
+			[fullProgrammeScanner scanUpToString:@"<"  intoString:&title];
 			
-		if ( title.length > 0 ) {
-			title = [title stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]];
-			title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			if ( title.length > 0 ) {
+				title = [title stringByTrimmingCharactersInSet:[NSCharacterSet punctuationCharacterSet]];
+				title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			}
+		
+			/* Create ProgrammeData Object & update */
+		
+			ProgrammeData *myProgramme = [[ProgrammeData alloc]initWithName:aProgramme.programmeName andChannel:@"ITV" andPID:productionId andURL:programmeURL andNUMBEREPISODES:aProgramme.numberEpisodes];
+		
+			if (numberEpisodesFound == 0)
+				[myProgramme makeNew];
+		
+			myProgramme.seriesNumber = seriesNumber;
+			
+			/* get date aired  */
+		
+			fullProgrammeScanner.scanLocation = scanPoint;
+			[fullProgrammeScanner scanUpToString:@"datetime=\"" intoString:&temp];
+		
+			temp = @"";
+		
+			if ( ![fullProgrammeScanner isAtEnd])  {
+				[fullProgrammeScanner scanString:@"datetime=\"" intoString:&temp];
+				[fullProgrammeScanner scanUpToString:@"\"" intoString:&temp];
+				temp = [temp stringByReplacingOccurrencesOfString:@"Z" withString:@"EST"];
+				[dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mmzzz"];
+				myProgramme.dateAired = [dateFormatter dateFromString:temp];
+				myProgramme.dateWithTime = true;
+			}
+
+			[myProgramme analyseTitle:title];
+			[myProgramme makeEpisodeName];
+
+			if ( [myProgramme isValid] ) {
+				numberEpisodesFound++;
+				[carriedForwardProgrammeArray addObject:myProgramme];
+			}
+		
+			/* Scan for next programme */
+		
+			[fullSeriesScanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
+			[fullSeriesScanner scanUpToString:@"</li>" intoString:&fullProgramme];
+		}
+		/* Scan for next series */
+		
+		[fullPageScanner scanUpToString:@"episode-list-" intoString:NULL];
+		[fullPageScanner scanString:@"episode-list-" intoString:NULL];
+		[fullPageScanner scanUpToString:@"\"" intoString:&seriesString];
+		
+		seriesNumber = 0;
+		
+		if ( [seriesString containsString:@"s"]) {
+			seriesNumberScanner = [NSScanner scannerWithString:seriesString];
+			[seriesNumberScanner scanUpToString:@"s" intoString:NULL];
+			[seriesNumberScanner scanString:@"s" intoString:NULL];
+			[seriesNumberScanner scanInt:&seriesNumber];
 		}
 		
-		/* Create ProgrammeData Object & update */
-		
-		ProgrammeData *myProgramme = [[ProgrammeData alloc]initWithName:aProgramme.programmeName andChannel:@"ITV" andPID:productionId andURL:programmeURL andNUMBEREPISODES:aProgramme.numberEpisodes];
-		
-		if (numberEpisodesFound == 0)
-			[myProgramme makeNew];
-		
-        /* get date aired  */
-		
-        fullProgrammeScanner.scanLocation = scanPoint;
-        [fullProgrammeScanner scanUpToString:@"datetime=\"" intoString:&temp];
-		
-		temp = @"";
-		
-        if ( ![fullProgrammeScanner isAtEnd])  {
-            [fullProgrammeScanner scanString:@"datetime=\"" intoString:&temp];
-            [fullProgrammeScanner scanUpToString:@"\"" intoString:&temp];
-			temp = [temp stringByReplacingOccurrencesOfString:@"Z" withString:@"EST"];
-			[dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mmzzz"];
-			myProgramme.dateAired = [dateFormatter dateFromString:temp];
-			myProgramme.dateWithTime = true;
-        }
-
-		[myProgramme analyseTitle:title];
-		[myProgramme makeEpisodeName];
-
-		if ( [myProgramme isValid] ) {
-			numberEpisodesFound++;
-			[carriedForwardProgrammeArray addObject:myProgramme];
-		}
-		
-        /* Scan for next programme */
-		
-		[scanner scanUpToString:@"data-episode-id=\"" intoString:NULL];
-		[scanner scanUpToString:@"</li>" intoString:&fullProgramme];
-    }
-    
+		[fullPageScanner scanUpToString:@"/section" intoString:&fullSeriesString];
+	}
+	
+	
     /* Quick sanity check - did we find the number of episodes that we expected */
     
     if ( numberEpisodesFound != aProgramme.numberEpisodes)  {

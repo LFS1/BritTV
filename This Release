@@ -1,5 +1,6 @@
-Added
-    Support got get-iPlayer.pl for BBC
-    Auto pilot mode to run every x hours with auto restart if failed download count exceeds x
-
-
+Added (Build 4.1.2)
+	Updated getBBCListings & getIplayerDownload to support latest round of changes from bbc website
+	Updated get_iPlayer to latest (3.24)
+	Updated youtube-dl to latest (20.01.01)
+	Updated getITVListings to get the series number (when available)
+	Fixed bug in getITVListings to get the programme title and episode number when available

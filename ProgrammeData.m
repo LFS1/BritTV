@@ -274,6 +274,9 @@ extern  LogController *theLogger;
 	if (self.episodeTitle.length)
 		self.episodeName = [NSString stringWithFormat:@"%@ (%@)", self.episodeName, self.episodeTitle];
 	
+	if ( [self.tvNetwork containsString:@"BBC"] )
+		self.episodeName = [NSString stringWithFormat:@"%@ - %@", self.episodeName, self.productionId];
+
 	/* Add some formatting data for display purposes only */
 	
 	NSDateFormatter *timeFormat = [[NSDateFormatter alloc]init];
@@ -385,6 +388,7 @@ extern  LogController *theLogger;
 	
 	BOOL getEpisodeNumber = false;
 	BOOL getSeriesNumber = false;
+	BOOL getPartNumber = false;
 	
 	/* Scan array pulling out episode or series numbers and keep the remainder as title text */
 	
@@ -403,11 +407,19 @@ extern  LogController *theLogger;
 			self.seriesNumber = [item intValue];
 			getSeriesNumber = false;
 		}
+		else if ( getPartNumber ) {
+			[newTitleArray addObject:[item stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+			getPartNumber = false;
+		}
 		else if ( [item caseInsensitiveCompare:@"Episode"]  == NSOrderedSame ) {
 			getEpisodeNumber = true;
 		}
 		else if ( [item caseInsensitiveCompare:@"Series"] == NSOrderedSame ) {
 			getSeriesNumber = true;
+		}
+		else if ( [item caseInsensitiveCompare:@"Part"] == NSOrderedSame ) {
+			getPartNumber = true;
+			[newTitleArray addObject:[item stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
 		}
 		else  if ( !self.episodeNumber && [item intValue] && !( [item intValue] > 1900 && [item intValue] < 2100 ) )  {
 			self.episodeNumber = [item intValue];
