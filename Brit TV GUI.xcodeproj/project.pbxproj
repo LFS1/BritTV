@@ -548,7 +548,7 @@
 					"\"$(SRCROOT)/Binaries\"",
 					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				MARKETING_VERSION = "4.1.2-HF2";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CODE_SIGN_FLAGS = "--no-strict";
@@ -590,7 +590,7 @@
 					"\"$(SRCROOT)/Binaries\"",
 					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				MARKETING_VERSION = "4.1.2-HF2";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CODE_SIGN_FLAGS = "--no-strict";
