@@ -24,7 +24,7 @@
 #
 #
 package main;
-my $version = 3.24;
+my $version = 3.26;
 my $version_text;
 $version_text = sprintf("v%.2f", $version) unless $version_text;
 #
@@ -63,8 +63,11 @@ use Time::Local;
 use Unicode::Normalize;
 use URI;
 use version 0.77;
+use if $^O eq 'MSWin32', "Win32::Unicode::Process" => qw();
 use constant DIVIDER => "-==-" x 20;
 use constant FB_EMPTY => sub { '' };
+use constant IS_MACOS => $^O eq 'darwin' ? 1 : 0;
+use constant IS_WIN32 => $^O eq 'MSWin32' ? 1 : 0;
 $PerlIO::encoding::fallback = XMLCREF;
 
 # Save default SIG actions
@@ -82,11 +85,11 @@ my $opt_format = {
 	attempts	=> [ 1, "attempts=n", 'Recording', '--attempts <number>', "Number of attempts to make or resume a failed connection.  --attempts is applied per-stream, per-mode.  Many modes have two or more streams available."],
 	audioonly		=> [ 1, "audioonly|audio-only!", 'Recording', '--audio-only', "Only download audio stream for TV programme. 'hls' recording modes are not supported and ignored. Produces .m4a file. Implies --force."],
 	downloadabortonfail	=> [ 1, "downloadabortonfail|download-abortonfail!", 'Recording', '--download-abortonfail', "Exit immediately if stream for any recording mode fails to download. Use to avoid repeated failed download attempts if connection is dropped or access is blocked."],
-	excludesupplier	=> [ 1, "excludecdn|exclude-cdn|excludesupplier|exclude-supplier=s", 'Recording', '--exclude-supplier <supplier>,<supplier>,...', "Comma-separated list of media stream suppliers to skip.  Possible values: akamai,limelight,bidi"],
+	excludesupplier	=> [ 1, "excludecdn|exclude-cdn|excludesupplier|exclude-supplier=s", 'Recording', '--exclude-supplier <supplier>,<supplier>,...', "Comma-separated list of media stream suppliers (CDNs) to skip. Possible values: akamai,limelight,bidi. Synonym: --exclude-cdn."],
 	force		=> [ 1, "force|force-download!", 'Recording', '--force', "Ignore programme history (unsets --hide option also)."],
 	fps25		=> [ 1, "fps25!", 'Recording', '--fps25', "Use only 25fps streams for TV programmes (HD video not available)."],
 	get		=> [ 2, "get|record|g!", 'Recording', '--get, -g', "Start recording matching programmes. Search terms required."],
-	includesupplier	=> [ 1, "includecdn|include-cdn|includesupplier|include-supplier=s", 'Recording', '--include-supplier <supplier>,<supplier>,...', "Comma-separated list of media stream suppliers to use if not included by default.  Possible values: akamai,limelight,bidi"],
+	includesupplier	=> [ 1, "includecdn|include-cdn|includesupplier|include-supplier=s", 'Recording', '--include-supplier <supplier>,<supplier>,...', "Comma-separated list of media stream suppliers (CDNs) to use if not included by default or if previously excluded by --exclude-supplier. Possible values: akamai,limelight,bidi. Synonym: --include-cdn."],
 	hash		=> [ 1, "hash!", 'Recording', '--hash', "Show recording progress as hashes"],
 	logprogress		=> [ 1, "log-progress|logprogress!", 'Recording', '--log-progress', "Force HLS/DASH download progress display to be captured when screen output is redirected to file.  Progress display is normally omitted unless writing to terminal."],
 	markdownloaded	=> [ 1, "markdownloaded|mark-downloaded!", 'Recording', '--mark-downloaded', "Mark programmes in search results or specified with --pid/--url as downloaded by inserting records in download history."],
@@ -132,6 +135,7 @@ my $opt_format = {
 	credits		=> [ 1, "credits!", 'Output', '--credits', "Download programme credits, if available."],
 	creditsonly		=> [ 1, "creditsonly|credits-only!", 'Output', '--credits-only', "Only download programme credits, if available."],
 	cuesheet		=> [ 1, "cuesheet|cue-sheet!", 'Output', '--cuesheet', "Create cue sheet (.cue file) for programme, if data available. Radio programmes only. Cue sheet will be very inaccurate and will required further editing. Cue sheet may require addition of UTF-8 BOM (byte-order mark) for some applications to identify encoding."],
+	cuesheetoffset	=> [ 1, "tracklistoffset|tracklist-offset|track-list-offset|cuesheetoffset|cuesheet-offset|cue-sheet-offset=n", 'Output', '--cuesheet-offset [-]<offset>', "Offset track times in cue sheet and track list by the specified number of seconds. Synonym: --tracklist-offset"],
 	cuesheetonly		=> [ 1, "cuesheetonly|cuesheet-only|cue-sheet-only!", 'Output', '--cuesheet-only', "Only create cue sheet (.cue file) for programme, if data available. Radio programmes only."],
 	fileprefix	=> [ 1, "file-prefix|fileprefix=s", 'Output', '--file-prefix <format>', "The filename prefix template (excluding dir and extension). Use substitution parameters in template (see docs for list). Default: <name> - <episode> <pid> <version>"],
 	limitprefixlength => [ 1, "limit-prefix-length|limitprefixlength=n", "Output", '--limitprefixlength <length>', "The maximum length for a file prefix.  Defaults to 240 to allow space within standard 256 limit."],
@@ -156,8 +160,8 @@ my $opt_format = {
 	thumbext	=> [ 1, "thumbext|thumb-ext=s", 'Output', '--thumb-ext <ext>', "Thumbnail filename extension to use"],
 	thumbonly	=> [ 1, "thumbonly|thumbnailonly|thumbnail-only|thumb-only!", 'Output', '--thumbnail-only', "Only download thumbnail image if available, not the programme"],
 	thumbseries	=> [ 1, "thumbseries|thumbnailseries|thumb-series|thumbnail-series!", 'Output', '--thumbnail-series', "Force use of series/brand thumbnail (series preferred) instead of episode thumbnail"],
-	thumbsize	=> [ 1, "thumbsize|thumb-size|thumbsizemeta|thumbnailsize|thumbnail-size=n", 'Output', '--thumbnail-size <width>', "Thumbnail size to use for the current recording and metadata. Specify width: 192,256,384,448,512,640,704,832,960,1280,1920. Invalid values will be mapped to nearest available. Default: 192"],
-	thumbsquare	=> [ 1, "thumbsquare|thumbnailsquare|thumb-square|thumbnail-square!", 'Output', '--thumbnail-square', "Download square version of thumbnail image."],
+	thumbsize	=> [ 1, "thumbsize|thumb-size|thumbsizemeta|thumbnailsize|thumbnail-size=n", 'Output', '--thumbnail-size <width>', "Thumbnail size to use for the current recording and metadata. Specify width: 192,256,384,448,512,640,704,832,960,1280,1920. Invalid values will be mapped to nearest available. Default: 1920 (1280 with --thumbnail-square)"],
+	thumbsquare	=> [ 1, "thumbsquare|thumbnailsquare|thumb-square|thumbnail-square!", 'Output', '--thumbnail-square', "Download square version of thumbnail image. Limits --thumbnail-size to 1280."],
 	tracklist		=> [ 1, "tracklist!", 'Output', '--tracklist', "Create track list of music played in programme, if data available. Track times and durations may be missing or incorrect."],
 	tracklistonly		=> [ 1, "tracklistonly|tracklist-only!", 'Output', '--tracklist-only', "Only create track list of music played in programme, if data available."],
 	whitespace	=> [ 1, "whitespace|ws|w!", 'Output', '--whitespace, -w', "Keep whitespace in file and directory names.  Default behaviour is to replace whitespace with underscores."],
@@ -334,7 +338,7 @@ $ENV{GETIPLAYER_PROFILE} ||= $ENV{GETIPLAYERUSERPREFS};
 if ( $ENV{GETIPLAYER_PROFILE} ) {
 	$profile_dir = $opt_pre->{profiledir} || $ENV{GETIPLAYER_PROFILE};
 # Otherwise look for windows style file locations
-} elsif ( $ENV{USERPROFILE} && $^O eq "MSWin32" ) {
+} elsif ( $ENV{USERPROFILE} && IS_WIN32 ) {
 	$profile_dir = $opt_pre->{profiledir} || File::Spec->catfile($ENV{USERPROFILE}, '.get_iplayer');
 # Options on unix-like systems
 } elsif ( $ENV{HOME} ) {
@@ -350,7 +354,7 @@ $ENV{GETIPLAYER_DEFAULTS} ||= $ENV{GETIPLAYERSYSPREFS};
 if ( $ENV{GETIPLAYER_DEFAULTS} ) {
 	$optfile_system = $ENV{GETIPLAYER_DEFAULTS};
 # Otherwise look for windows style file locations
-} elsif ( $ENV{ALLUSERSPROFILE} && $^O eq "MSWin32" ) {
+} elsif ( $ENV{ALLUSERSPROFILE} && IS_WIN32 ) {
 	$optfile_system = File::Spec->catfile($ENV{ALLUSERSPROFILE}, 'get_iplayer', 'options');
 # System options on unix-like systems
 } else {
@@ -363,12 +367,12 @@ $ENV{GETIPLAYER_OUTPUT} ||= $ENV{IPLAYER_OUTDIR};
 # default output directory on desktop for Windows/macOS
 if ( ! $ENV{GETIPLAYER_OUTPUT} ) {
 	my $desktop;
-	if ( $^O eq "MSWin32" ) {
+	if ( IS_WIN32 ) {
 		eval 'use Win32 qw(CSIDL_DESKTOPDIRECTORY); $desktop = Win32::GetFolderPath(CSIDL_DESKTOPDIRECTORY);';
 		if ( $@ ) {
 			undef $desktop
 		}
-	} elsif ( $^O eq "darwin" ) {
+	} elsif ( IS_MACOS ) {
 		$desktop = File::Spec->catfile($ENV{HOME}, "Desktop")
 	}
 	if ( $desktop && -d $desktop) {
@@ -680,19 +684,16 @@ if ( defined($opt->{trimhistory}) ) {
 		unlink $lockfile;
 		exit 5;
 	};
-	# PVR Lockfile detection (with 12 hrs stale lockfile check)
-	lockfile( 43200 ) if ! $opt->{test};
+	lockfile() if ! $opt->{test};
 	$pvr->run_scheduler();
 
 } elsif ( $opt->{pvr} ) {
-	# PVR Lockfile detection (with 12 hrs stale lockfile check)
-	lockfile( 43200 ) if ! $opt->{test};
+	lockfile() if ! $opt->{test};
 	$retcode = $pvr->run( @search_args );
 	unlink $lockfile;
 
 } elsif ( $opt->{pvrsingle} ) {
-	# PVR Lockfile detection (with 12 hrs stale lockfile check)
-	lockfile( 43200 ) if ! $opt->{test};
+	lockfile() if ! $opt->{test};
 	$retcode = $pvr->run( '^'.$opt->{pvrsingle}.'$' );
 	unlink $lockfile;
 
@@ -732,9 +733,9 @@ sub release_check {
 	if ( $force_check || ! -f $relchk_file || $now - stat($relchk_file)->mtime > 7 * 86400 ) {
 		main::logger "INFO: Checking for new release\n";
 		my $repo_suffix;
-		if ( $^O eq "darwin" ) {
+		if ( IS_MACOS ) {
 			$repo_suffix = "_macos";
-		} elsif ( $^O eq "MSWin32" ) {
+		} elsif ( IS_WIN32 ) {
 			$repo_suffix = "_win32";
 		}
 		my $releases_url = "https://github.com/get-iplayer/get_iplayer${repo_suffix}/releases";
@@ -2052,27 +2053,51 @@ sub list_unique_element_counts {
 	return 0;
 }
 
+# after Win32::ShellQuote::quote_literal
+sub quote_arg {
+	my ($arg) = @_;
+	if ( $arg eq '' || $arg =~ /[^\w\-]/ ) {
+		$arg = escape_arg($arg);
+		$arg = qq{"$arg"};
+	}
+	return $arg;
+}
+
+sub escape_arg {
+	my ($arg) = @_;
+	my $r = IS_WIN32 ? '"' : '["`$]';
+	$arg =~ s{(\\*)(?=$r|\z)}{$1$1}g;
+	$arg =~ s{($r)}{\\$1}g;
+	return $arg;
+}
+
 # Invokes command in @args as a system call (hopefully) without using a shell
 # Can also redirect all stdout and stderr to either: STDOUT, STDERR or unchanged
 # Usage: run_cmd( <normal|STDERR|STDOUT>, @args )
 # Returns: exit code
 sub run_cmd {
+	#if ( IS_WIN32 && ! grep /[\r\n]/, @_ ) {
+	#	return run_cmd_win32( @_ );
+	#}
 	my $mode = shift;
-	my @cmd = ( @_ );
-	my $rtn;
-
-	my $log_str;
-	my @log_cmd = @cmd;
-	if ( $#log_cmd > 0 ) {
-		$log_str = (join ' ', map {s/\"/\\\"/g; "\"$_\"";} @log_cmd)
-	} else {
-		$log_str = $log_cmd[0]
-	}
-	main::logger "INFO: Command: $log_str\n" if $opt->{verbose};
-
 	$mode = 'QUIET' if ( $opt->{quiet} || $opt->{silent} ) && ! ($opt->{debug} || $opt->{verbose});
-
+	my @cmd;
+	if ( IS_WIN32 && @_ > 1 ) {
+		@cmd = map { quote_arg( $_ ); } @_;
+	} else {
+		@cmd = ( @_ );
+	}
+	if ( $opt->{verbose} ) {
+		my $log_str;
+		if ( ( IS_WIN32 && @cmd > 1 ) || @cmd == 1 ) {
+			$log_str = join ' ', @cmd;
+		} else {
+			$log_str = join( ' ',  map { quote_arg($_) } @cmd );
+		}
+		main::logger "INFO: Command: $log_str\n";
+	}
 	my $procid;
+	my $rtn;
 	# Don't create zombies - unfortunately causes open3 to return -1 exit code regardless!
 	##### local $SIG{CHLD} = 'IGNORE';
 	# Setup signal handler for SIGTERM/INT/KILL - kill, kill, killlllll
@@ -2097,7 +2122,6 @@ sub run_cmd {
 		main::logger "\n";
 		exit 0;
 	};
-
 	my $fileno_stdin = fileno(STDIN);
 	my $fileno_stdout = fileno(STDOUT);
 	my $fileno_stderr = fileno(STDERR);
@@ -2107,20 +2131,17 @@ sub run_cmd {
 		local *STDIN;
 		local *STDOUT;
 		local *STDERR;
+		local *DEVNULL;
 		open(STDIN, "<&=", $fileno_stdin);
 		open(STDOUT, ">&=", $fileno_stdout);
 		open(STDERR, ">&=", $fileno_stderr);
-
-		local *DEVNULL;
 		# Define what to do with STDOUT and STDERR of the child process
 		my $fh_child_out = ">&STDOUT";
 		my $fh_child_err = ">&STDERR";
 		if ( $mode eq 'STDOUT' ) {
 			$fh_child_out = $fh_child_err = ">&STDOUT";
-			#$system_suffix = '2>&1';
 		} elsif ( $mode eq 'STDERR' ) {
 			$fh_child_out = $fh_child_err = ">&STDERR";
-			#$system_suffix = '1>&2';
 		} elsif ( $mode =~ /^QUIET/ ) {
 			open(DEVNULL, ">", File::Spec->devnull()) || die "ERROR: Cannot open null device\n";
 			if ( $mode eq 'QUIET_STDOUT' ) {
@@ -2131,27 +2152,78 @@ sub run_cmd {
 				$fh_child_out = $fh_child_err = ">&DEVNULL";
 			}
 		}
-
 		# Don't use NULL for the 1st arg of open3 otherwise we end up with a messed up STDIN once it returns
 		$procid = open3( 0, $fh_child_out, $fh_child_err, @cmd );
-
 		# Wait for child to complete
 		waitpid( $procid, 0 );
 		$rtn = $?;
-
 		close(DEVNULL);
 		close(STDERR);
 		close(STDOUT);
 		close(STDIN);
 	}
-
 	# Restore old signal handlers
 	$SIG{TERM} = $SIGORIG{TERM};
 	$SIG{PIPE} = $SIGORIG{PIPE};
 	$SIG{INT} = $SIGORIG{INT};
 	#$SIG{CHLD} = $SIGORIG{CHLD};
+	return interpret_return_code( $rtn );
+}
 
-	# Interpret return code	and force return code 2 upon error
+# run command with Win32::Unicode::Process
+# supports Unicode parameters (but not embedded newlines)
+sub run_cmd_win32 {
+	# monkey patch to work around quoting bugs
+	local *Win32::Unicode::Process::_create_process = sub {
+		my $cmd_str = join ' ',  @_;
+		my $cmd = Win32::Unicode::Util::utf8_to_utf16('/x /c "' . $cmd_str . '"') . Win32::Unicode::Constant::NULL();
+		my $path = File::Spec->catfile($ENV{ComSpec} || 'C:/WINDOWS/system32/cmd.exe');
+		my $shell = Win32::Unicode::Util::utf8_to_utf16($path) . Win32::Unicode::Constant::NULL();
+		return Win32::Unicode::Process::create_process($shell, $cmd);
+	};
+	my $mode = shift;
+	$mode = 'QUIET' if ( $opt->{quiet} || $opt->{silent} ) && ! ($opt->{debug} || $opt->{verbose});
+	my @cmd;
+	if ( @_ > 1 ) {
+		@cmd = map { quote_arg( $_ ); } @_;
+	} else {
+		@cmd = ( @_ );
+	}
+	if ( $opt->{verbose} ) {
+		my $log_str = join ' ',  @cmd;
+		main::logger "INFO: Win32 Command: $log_str\n";
+	}
+	open(XSTDOUT, ">&STDOUT");
+	open(XSTDERR, ">&STDERR");
+	my $redir;
+	if ( $mode eq 'STDOUT' ) {
+		$redir = '2>&1';
+	} elsif ( $mode eq 'STDERR' ) {
+		$redir = '1>&2';
+	} elsif ( $mode =~ /^QUIET/ ) {
+		open(DEVNULL, ">", File::Spec->devnull()) || die "ERROR: Cannot open null device\n";
+		if ( $mode eq 'QUIET_STDOUT' ) {
+			open(STDOUT, ">&DEVNULL");
+		} elsif ( $mode eq 'QUIET_STDERR' ) {
+			open(STDERR, ">&DEVNULL");
+		} else {
+			open(STDOUT, ">&DEVNULL");
+			open(STDERR, ">&DEVNULL");
+		}
+	}
+	push @cmd, $redir if $redir;
+	my $rtn = Win32::Unicode::Process::systemW(@cmd);
+	open(STDOUT, ">&XSTDOUT");
+	open(STDERR, ">&XSTDERR");
+	close(DEVNULL);
+	close(XSTDOUT);
+	close(XSTDERR);
+	return interpret_return_code( $rtn );
+}
+
+sub interpret_return_code {
+	my $rtn = shift;
+	# Interpret return code and force return code 2 upon error
 	my $return = $rtn >> 8;
 	if ( $rtn == -1 ) {
 		main::logger "ERROR: Command failed to execute: $!\n" if $opt->{verbose};
@@ -2213,13 +2285,13 @@ sub StringUtils::sanitize_path {
 	# Replace forward slashes with underscore if not path
 	$string =~ s|\/|_|g unless $is_path;
 	# Replace backslashes with underscore if not Windows path
-	$string =~ s|\\|_|g unless $^O eq "MSWin32" && $is_path;
+	$string =~ s|\\|_|g unless IS_WIN32 && $is_path;
 	# Do not sanitise if specified
 	if ( $opt->{nosanitise} && ! $force_default ) {
 		# Remove invalid chars for Windows
-		$string =~ s/$win_bad//g if $^O eq "MSWin32";
+		$string =~ s/$win_bad//g if IS_WIN32;
 		# Remove invalid chars for macOS
-		$string =~ s/$mac_bad//g if $^O eq "darwin";
+		$string =~ s/$mac_bad//g if IS_MACOS;
 	} else {
 		# use ISO8601 dates
 		$string =~ s|(\d\d)[/_](\d\d)[/_](20\d\d)|$3-$2-$1|g;
@@ -2263,31 +2335,36 @@ sub cleanup {
 # Lock file detection (<stale_secs>)
 # Global $lockfile
 sub lockfile {
-	my $stale_time = shift || 86400;
 	my $now = time();
 	# if lockfile exists then quit as we are already running
 	if ( -T $lockfile ) {
 		if ( ! open (LOCKFILE, $lockfile) ) {
-			main::logger "ERROR: Cannot read lockfile '$lockfile'\n";
+			main::logger "ERROR: Cannot read PVR lockfile: '$lockfile'\n";
 			exit 1;
 		}
 		my @lines = <LOCKFILE>;
 		close LOCKFILE;
-
-		# If the process is still running and the lockfile is newer than $stale_time seconds
-		if ( kill(0,$lines[0]) > 0 && $now < ( stat($lockfile)->mtime + $stale_time ) ) {
-				main::logger "ERROR: Quitting - process is already running ($lockfile)\n";
-				# redefine cleanup sub so that it doesn't delete $lockfile
+		# remove lockfile if does not contain numeric process ID and exit
+		if ( ! @lines || $lines[0] !~ /^\d+$/ ) {
+				main::logger "ERROR: Quitting - invalid PVR lockfile detected: '$lockfile'\n";
+				main::logger "ERROR: Ensure PVR is not already running and restart.\n";
+				unlink $lockfile;
 				$lockfile = '';
-				exit 0;
+				exit 1;
+		}
+		# exit if the process is still running
+		if ( kill( 0, $lines[0] ) ) {
+				main::logger "ERROR: Quitting - PVR is already running (process ID: $lines[0])\n";
+				$lockfile = '';
+				exit 1;
 		} else {
-			main::logger "INFO: Removing stale lockfile\n" if $opt->{verbose};
-			unlink ${lockfile};
+			main::logger "INFO: Removing orphaned PVR lockfile: '$lockfile'\n" if $opt->{verbose};
+			unlink $lockfile;
 		}
 	}
-	# write our PID into this lockfile
+	# write our process ID into new lockfile
 	if (! open (LOCKFILE, "> $lockfile") ) {
-		main::logger "ERROR: Cannot write to lockfile '${lockfile}'\n";
+		main::logger "ERROR: Cannot write to PVR lockfile '$lockfile'\n";
 		exit 1;
 	}
 	print LOCKFILE $$;
@@ -2373,12 +2450,12 @@ sub regex_numbers {
 
 sub default_encodinglocale {
 	return 'UTF-8' if (${^UNICODE} & 32);
-	return ($^O eq "MSWin32" ? 'cp1252' : 'UTF-8');
+	return (IS_WIN32 ? 'cp1252' : 'UTF-8');
 }
 
 sub default_encodingconsoleout {
 	return 'UTF-8' if (${^UNICODE} & 6);
-	return ($^O eq "MSWin32" ? 'cp850' : 'UTF-8');
+	return (IS_WIN32 ? 'cp850' : 'UTF-8');
 }
 
 sub encode_fs {
@@ -2493,7 +2570,7 @@ sub usage {
 		'This applies even if the base option name already begins with "no-", e.g., --no-no-tag or --no-no-artwork',
 	);
 	push @man,
-		'.TH GET_IPLAYER "1" "December 2019" "Phil Lewis" "get_iplayer Manual"',
+		'.TH GET_IPLAYER "1" "June 2020" "Phil Lewis" "get_iplayer Manual"',
 		'.SH NAME', 'get_iplayer - Stream Recording tool and PVR for BBC iPlayer',
 		'.SH SYNOPSIS',
 		'\fBget_iplayer\fR [<options>] [<regex|index> ...]',
@@ -3288,6 +3365,7 @@ use strict;
 use Time::Local;
 use URI;
 use XML::LibXML 1.91;
+use constant IS_WIN32 => $^O eq 'MSWin32' ? 1 : 0;
 
 my $ffmpeg_check;
 
@@ -4092,10 +4170,12 @@ sub substitute {
 			}
 		# escape these chars: ! ` \ "
 		} elsif ($sanitize_mode == 4) {
-			$replace = $value;
 			# Don't escape file paths
-			if ( $key !~ /(filename|filepart|thumbfile|tracklist|credits|^dir)/ ) {
-				$replace =~ s/([\!"\\`])/\\$1/g;
+			if ( $key =~ /(filename|filepart|thumbfile|tracklist|credits|cuesheet|subsfile|susbspart|subsraw|^dir)/ ) {
+				$replace = $value;
+			} else {
+				#$replace =~ s/([\!"\\`])/\\$1/g;
+				$replace = main::escape_arg($value);
 			}
 		} else {
 			$replace = $value;
@@ -4337,7 +4417,7 @@ sub generate_filenames {
 	main::logger "DEBUG: Raw Mode:           $opt->{raw}\n" if $opt->{debug};
 
 	# Check path length is < 256 chars (Windows only)
-	if ( length( $prog->{filepart} ) > 255 && $^O eq "MSWin32" ) {
+	if ( length( $prog->{filepart} ) > 255 && IS_WIN32 ) {
 		main::logger("ERROR: Generated file path is too long, please use --fileprefix, --subdir-format, --subdir and --output options to shorten it to below 256 characters\n");
 		main::logger("ERROR: Generated file path: $prog->{filepart}\n");
 		return 1;
@@ -4531,29 +4611,7 @@ sub download_tracklist {
 	}
 	main::logger "INFO: Downloading track data\n" if $do_cue || $opt->{tracklist} || $opt->{verbose};
 	my $ua = main::create_ua( 'desktop', 1 );
-	my $url1 = "https://www.bbc.co.uk/programmes/$prog->{pid}/segments.inc";
-	my ($html, $res1) = main::request_url_retry($ua , $url1, 3, undef, undef, undef, undef, 1);
-	unless ( $res1 && $res1->is_success ) {
-		if ( $res1 && $res1->code == 404 ) {
-			main::logger "WARNING: Track data not found\n";
-		} else {
-			main::logger "WARNING: Track data download failed\n";
-		}
-		return 1;
-	}
-	unless ( $html =~ /\w/ ) {
-		main::logger "WARNING: Track data not defined\n";
-		return 1;
-	}
-	unless ( $res1 && $res1->request ) {
-		main::logger "WARNING: Track data response invalid\n";
-		return 1;
-	}
-	(my $url2 = $res1->request->uri) =~ s/segments\.inc/segments\.json/;
-	unless ( $url2 ) {
-		main::logger "WARNING: Track times URL invalid\n";
-		return 1;
-	}
+	my $url2 = "https://www.bbc.co.uk/programmes/$prog->{pid}/segments.json";
 	my ($json, $res2) = main::request_url_retry($ua , $url2, 3, undef, undef, undef, undef, 1);
 	unless ( $res2 && $res2->is_success ) {
 		if ( $res2 && $res2->code == 404 ) {
@@ -4590,7 +4648,9 @@ sub download_tracklist {
 		my $segment = $se->{segment};
 		my $begin = $se->{version_offset};
 		if ( defined($begin) ) {
+			$begin += $opt->{cuesheetoffset};
 			my $begin_next = $se_next->{version_offset};
+			$begin_next += $opt->{cuesheetoffset};
 			$duration_cue = $begin_next - $begin if $begin_next > $begin;
 			my $end = $begin + $duration_cue;
 			unless ( ( $stop > 0 && $begin > $stop ) || ( $start > 0 && $end < $start ) ) {
@@ -4719,7 +4779,7 @@ sub download_credits {
 	}
 	main::logger "INFO: Downloading credits\n" if $opt->{credits} || $opt->{verbose};
 	my $ua = main::create_ua( 'desktop', 1 );
-	my $url1 = "https://www.bbc.co.uk/programmes/$prog->{pid}/credits.inc";
+	my $url1 = "https://www.bbc.co.uk/programmes/$prog->{pid}";
 	my ($html, $res1) = main::request_url_retry($ua , $url1, 3, undef, undef, undef, undef, 1);
 	unless ( $res1 && $res1->is_success ) {
 		if ( $res1 && $res1->code == 404 ) {
@@ -4735,26 +4795,23 @@ sub download_credits {
 	}
 	my $dom = XML::LibXML->load_html(string => $html, recover => 1, suppress_errors => 1);
 	my @out;
-	for my $typeof ( "PerformanceRole", "Person" ) {
-		my @credits = $dom->findnodes('//tr[@typeof="'.$typeof.'"]');
-		if ( @credits ) {
-			if ( ! @out ) {
-				push @out, $prog->{name};
-				push @out, $prog->{episode};
-				push @out, $prog->{firstbcastdate} if $prog->{firstbcastdate};
-				push @out, $prog->{player} || $prog->{web} || $prog->{pid};
+	my @credits = $dom->findnodes('//div[@id="credits"]//tr');
+	if ( @credits ) {
+		push @out, $prog->{name};
+		push @out, $prog->{episode};
+		push @out, $prog->{firstbcastdate} if $prog->{firstbcastdate};
+		push @out, $prog->{player} || $prog->{web} || $prog->{pid};
+		push @out, "----------";
+		for my $credit ( @credits ) {
+			my $role = $credit->findvalue('./td[1]');
+			my $contributor = $credit->findvalue('./td[2]');
+			for my $item ( $role, $contributor ) {
+				$item =~ s/(\s){2,}/$1/g;
+				$item =~ s/(^\s+|[\s\.]+$)//g;
+				$item =~ s/\n+/ /g;
 			}
-			push @out, "----------";
-			for my $credit ( @credits ) {
-				my $role = $credit->findvalue('./td[1]');
-				my $contributor = $credit->findvalue('./td[2]');
-				for my $item ( $role, $contributor ) {
-					$item =~ s/(\s){2,}/$1/g;
-					$item =~ s/(^\s+|[\s\.]+$)//g;
-					$item =~ s/\n+/ /g;
-				}
-				push @out, "$role: $contributor"
-			}
+			next unless $role && $contributor;
+			push @out, "$role: $contributor"
 		}
 	}
 	if ( @out ) {
@@ -5595,7 +5652,7 @@ sub fetch_episodes_recursive {
 					$check_series_nav = 1;
 				}
 				unless ( $channel ) {
-					$channel = $dom->findvalue('//div[contains(@class,"episodes-available")]/img/@alt');
+					$channel = $dom->findvalue('//div[contains(@class,"hero-header__label")]');
 				}
 				unless ( $title ) {
 					$title = $dom->findvalue('//h1[contains(@class,"hero-header__title")]');
@@ -5721,8 +5778,12 @@ sub insert_episode_number {
 
 sub thumb_url_recipe {
 	my $prog = shift;
-	my $defsize = 192;
+	my $defsize = 1920;
 	my $thumbsize = $opt->{thumbsize} || $defsize;
+	if ( $opt->{thumbsquare} && $opt->{thumbsize} > 1280 ) {
+			main::logger "WARNING: Thumbnail size is limited to 1280 with --thumbnail-square\n";
+	}
+	$thumbsize = 1280 if $opt->{thumbsquare} && $thumbsize > 1280;
 	my $recipe = $prog->thumb_url_recipes->{ $thumbsize };
 	if ( ! $recipe ) {
 		if ( $thumbsize >= 1 && $thumbsize <= 11 ) {
@@ -5746,7 +5807,7 @@ sub thumb_url_recipe {
 			}
 			$newsize = $size;
 		}
-		main::logger "WARNING: Invalid thumbnail size: $thumbsize - using nearest available ($newsize)\n";
+		main::logger "WARNING: Invalid thumbnail size: $thumbsize - using nearest available size ($newsize)\n";
 		$recipe = $prog->thumb_url_recipes->{ $newsize };
 	}
 	if ( $opt->{thumbsquare} ) {
@@ -6279,7 +6340,6 @@ sub get_stream_data {
 	my ( $prog, $verpid, $media, $version ) = @_;
 	my $modelist = $prog->modelist();
 	my $data = {};
-	return $data if $version eq "store";
 
 	main::logger "INFO: Getting stream data for version: '$version'\n" if $opt->{verbose};
 	# filter CDN suppliers
@@ -6538,7 +6598,7 @@ sub modelist {
 	$mlist =~ s/(flash|hls)aac/radio/g;
 	$mlist =~ s/(flash|rtmp)/tv/g;
 	if ( $mlist ne $mlist_orig && ! $opt->{nowarnmoderemap} ) {
-		main::logger "WARNING: Input mode list remapped from '$mlist_orig' to '$mlist'\n";
+		main::logger "WARNING: Invalid mode list '$mlist_orig' remapped to '$mlist'\n";
 		main::logger "WARNING: Please update your preferences\n";
 		$opt->{nowarnmoderemap} = 1;
 	}
@@ -6811,7 +6871,7 @@ use Time::Piece;
 use URI;
 use XML::LibXML 1.91;
 use XML::LibXML::XPathContext;
-use constant DEFAULT_THUMBNAIL => "https://ichef.bbci.co.uk/images/ic/192xn/p01tqv8z.png";
+use constant DEFAULT_THUMBNAIL => "https://ichef.bbci.co.uk/images/ic/1920xn/p01tqv8z.png";
 
 # Class vars
 sub index_min { return 1 }
@@ -7638,11 +7698,9 @@ sub ttml_to_srt {
 		'yellow'  => '#ffff00',
 		'white'   => '#ffffff'
 	);
-
 	use Text::Wrap qw(fill $columns $huge);
 	$columns = $mono ? 39 : 37;
 	$huge = 'overflow';
-
 	$ttml =~ tr/\x00//d;
 	my $dom;
 	eval { $dom = XML::LibXML->load_xml(string => $ttml); };
@@ -7663,14 +7721,19 @@ sub ttml_to_srt {
 	eval { $fps = $xpc->findvalue('/*/@ttp:frameRate') };
 	my %style_colors;
 	foreach my $style ($xpc->findnodes('//tt:styling/tt:style')) {
-		my $style_id = $style->findvalue('@id');
+		my $style_id = $style->findvalue('@xml:id');
+		$style_id ||= $style->findvalue('@id');
 		if ($style_id) {
 			my $style_color;
 			eval { $style_color = $style->findvalue('@tts:color') };
 			if ($style_color) {
-				my $style_hex = $hex_colors{$style_color};
-				if ($style_hex) {
-					$style_colors{$style_id} = $style_hex;
+				if ($style_color =~ /^#/) {
+					$style_colors{$style_id} = substr($style_color, 0, 7);
+				} else {
+					my $style_hex = $hex_colors{$style_color};
+					if ($style_hex) {
+						$style_colors{$style_id} = $style_hex;
+					}
 				}
 			}
 		}
@@ -7678,12 +7741,13 @@ sub ttml_to_srt {
 	my ($body) = $xpc->findnodes('//tt:body');
 	my $body_style = $body->findvalue('@style');
 	my $body_color = $style_colors{$body_style} || $hex_colors{'white'};
+	$body_color = substr($body_color, 0, 7);
 	my $curr_color = $body_color;
-
 	open( my $fh, "> $srt" );
 	for my $div ($xpc->findnodes('tt:div', $body)) {
 		my $div_style = $div->findvalue('@style');
 		my $div_color = $style_colors{$div_style} || $body_color;
+		$div_color = substr($div_color, 0, 7);
 		$curr_color = $div_color;
 		for my $p ($xpc->findnodes('tt:p', $div)) {
 			my (@times, @ts);
@@ -7716,6 +7780,7 @@ sub ttml_to_srt {
 			if ( $p_color && $p_color !~ /^#/ ) {
 				$p_color = $hex_colors{$p_color};
 			}
+			$p_color = substr($p_color, 0, 7);
 			$p_color ||= $div_color;
 			for my $p_child ($p->childNodes) {
 				if ($p_child->nodeName eq "br") {
@@ -7746,6 +7811,7 @@ sub ttml_to_srt {
 					if ( $span_color && $span_color !~ /^#/ ) {
 						$span_color = $hex_colors{$span_color};
 					}
+					$span_color = substr($span_color, 0, 7);
 					$span_color ||= $p_color;
 					for my $span_child ($span->childNodes) {
 						if ($span_child->nodeName eq "br") {
@@ -8791,7 +8857,7 @@ use strict;
 use Time::Local;
 
 # Class vars
-my %vars = {};
+my %vars = ();
 # Global options
 my $optref;
 my $opt_fileref;
@@ -9229,9 +9295,9 @@ sub enable {
 ############# Tagger Class ##############
 package Tagger;
 
-use Encode;
+use Encode qw(:default :fallback_all);
 use File::stat;
-use constant FB_EMPTY => sub { '' };
+use constant IS_WIN32 => $^O eq 'MSWin32' ? 1 : 0;
 
 # already in scope
 # my ($opt, $bin);
@@ -9251,14 +9317,16 @@ sub opt_format {
 		noartwork => [ 1, "noartwork|no-artwork!", 'Tagging', '--no-artwork', "Do not embed thumbnail image in output file. Also removes existing artwork. All other metadata values will be written."],
 		notag => [ 1, "notag|no-tag!", 'Tagging', '--no-tag', "Do not tag downloaded programmes."],
 		tag_credits => [ 1, "tagcredits|tag-credits!", 'Tagging', '--tag-credits', "Add programme credits (if available) to lyrics field."],
+		tag_encoding	=> [ 1, "tagencoding|tag-encoding=s", 'Tagging', '--tag-encoding <name>', "(Windows only) Single-byte character encoding for non-ASCII characters in metadata tags. Encoding name must be known to Perl Encode module. Unicode (UTF* or UCS*) character encodings are not supported. Default: cp1252 (Windows code page 1252)"],
 		tag_formatshow		=> [ 1, "tagformatshow|tag-format-show=s", 'Tagging', '--tag-format-show', "Format template for programme name in tag metadata. Use substitution parameters in template (see docs for list). Default: <name>"],
 		tag_formattitle		=> [ 1, "tagformattitle|tag-format-title=s", 'Tagging', '--tag-format-title', "Format template for episode title in tag metadata. Use substitution parameters in template (see docs for list). Default: <episodeshort>"],
 		tag_isodate		=> [ 1, "tagisodate|tag-isodate!", 'Tagging', '--tag-isodate', "Use ISO8601 dates (YYYY-MM-DD) in album/show names and track titles"],
-		tag_podcast => [ 1, "tagpodcast|tag-podcast!", 'Tagging', '--tag-podcast', "Tag downloaded radio and tv programmes as iTunes podcasts"],
-		tag_podcast_radio => [ 1, "tagpodcastradio|tag-podcast-radio!", 'Tagging', '--tag-podcast-radio', "Tag only downloaded radio programmes as iTunes podcasts"],
-		tag_podcast_tv => [ 1, "tagpodcasttv|tag-podcast-tv!", 'Tagging', '--tag-podcast-tv', "Tag only downloaded tv programmes as iTunes podcasts"],
+		tag_nounicode	=> [ 1, "tagnoutf8|tag-noutf8|tag-no-utf8|tagnounicode|tag-nounicode|tag-no-unicode!", 'Tagging', '--tag-no-unicode', "(Windows only) Do not attempt to perform Unicode tagging and use single-byte character encoding instead (see --tag-encoding)"],
+		tag_podcast => [ 1, "tagpodcast|tag-podcast!", 'Tagging', '--tag-podcast', "Tag downloaded radio and tv programmes as iTunes podcasts (incompatible with Music/Podcasts/TV apps on macOS 10.15 and higher)"],
+		tag_podcast_radio => [ 1, "tagpodcastradio|tag-podcast-radio!", 'Tagging', '--tag-podcast-radio', "Tag only downloaded radio programmes as iTunes podcasts (incompatible with Music/Podcasts/TV apps on macOS 10.15 and higher)"],
+		tag_podcast_tv => [ 1, "tagpodcasttv|tag-podcast-tv!", 'Tagging', '--tag-podcast-tv', "Tag only downloaded tv programmes as iTunes podcasts (incompatible with Music/Podcasts/TV apps on macOS 10.15 and higher)"],
 		tag_tracklist => [ 1, "tagtracklist|tag-tracklist!", 'Tagging', '--tag-tracklist', "Add track list of music played in programme (if available) to lyrics field."],
-		tag_utf8 => [ 1, "tagutf8|tag-utf8!", 'Tagging', '--tag-utf8', "Use UTF-8 encoding for non-ASCII characters in AtomicParsley parameter values (Linux/Unix/macOS only). Use only if auto-detect fails."],
+		tag_utf8 => [ 1, "tagutf8|tag-utf8!", 'Ignored', '--tag-utf8', "Use UTF-8 encoding for non-ASCII characters in AtomicParsley parameter values (Linux/Unix/macOS only). Use only if auto-detect fails."],
 	};
 }
 
@@ -9281,8 +9349,8 @@ sub tags_from_metadata {
 	($tags->{albumArtist} = "BBC " . ucfirst($meta->{type})) =~ s/tv/TV/i;
 	$tags->{album} = $meta->{show};
 	$tags->{grouping} = $meta->{categories};
-	# composer references iPlayer
-	$tags->{composer} = "BBC iPlayer";
+	# composer references iPlayer/Sounds
+	$tags->{composer} = "BBC" . ( $meta->{type} eq "tv" ? " iPlayer" : $meta->{type} eq "radio" ? " Sounds" : "" );
 	# extract genre as first category, use second if first too generic
 	$tags->{genre} = $meta->{category};
 	$tags->{comment} = $meta->{descshort};
@@ -9349,6 +9417,8 @@ sub tags_from_metadata {
 			main::logger "WARNING: --tag-credits specified but credits file not found: $meta->{credits}\n";
 		}
 	}
+	# normalise line endings to CRLF
+	$tags->{lyrics} =~ s/(\r\n?|\n)/\r\n/g;
 	$tags->{description} = $tags->{comment};
 	$tags->{longDescription} = $tags->{lyrics};
 	while ( my ($key, $val) = each %{$tags} ) {
@@ -9357,26 +9427,16 @@ sub tags_from_metadata {
 	return $tags;
 }
 
-# in-place escape/enclose embedded quotes in command line parameters
-sub tags_escape_quotes {
-	my ($tags) = @_;
-	# only necessary for Windows
-	if ( $^O =~ /^MSWin32$/ ) {
-		while ( my ($key, $val) = each %$tags ) {
-			if ($val =~ /"/) {
-				$val =~ s/"/\\"/g;
-				$tags->{$key} = '"'.$val.'"';
-			}
-		}
-	}
-}
-
-# in-place encode metadata values to iso-8859-1
+# in-place encode metadata values
 sub tags_encode {
-	my ($tags) = @_;
-	while ( my ($key, $val) = each %{$tags} ) {
-		$tags->{$key} = encode("iso-8859-1", $val, FB_EMPTY);
+	my ($tags, $encoding) = @_;
+	if ( ! $encoding || $encoding =~ /(UTF|UCS)/i || ! find_encoding($encoding) ) {
+		main::logger "WARNING: Encoding '$encoding' is not supported for metadata tags and will be ignored\n";
+		return;
 	}
+	while ( my ($key, $val) = each %{$tags} ) {
+		$tags->{$key} = encode($encoding, $val, FB_XMLCREF);
+ 	}
 }
 
 # add metadata tag to programme
@@ -9421,7 +9481,7 @@ sub tag_prog {
 	return $rc;
 }
 
-sub ap_init {
+sub tag_init {
 	return if $ap_check;
 	$bin->{atomicparsley} = $opt->{atomicparsley} || 'AtomicParsley';
 	if ( ! main::exists_in_path( 'atomicparsley' ) ) {
@@ -9441,25 +9501,16 @@ sub ap_init {
 	$opt->{myaphdvideo} = 1 if $ap_help =~ /--hdvideo/;
 	$opt->{myaplongdesc} = 1 if $ap_help =~ /--longdesc/;
 	$opt->{myaplongdescription} = 1 if $ap_help =~ /--longDescription/;
-	$opt->{myaputf8} = 1 if ! defined($opt->{tag_utf8}) and ( $^O ne "MSWin32" or $bin->{atomicparsley} =~ /-utf8/i );
+	$opt->{myaplongdescfile} = 1 if $ap_help =~ /--longdescFile/;
+	$opt->{myaplyricsfile} = 1 if $ap_help =~ /--lyricsFile/;
+	if ( $opt->{verbose} && $ap_help =~ /(AtomicParsley version:.*)/i ) {
+		main::logger "INFO: $1\n";
+	}
 	$ap_check = 1;
 }
 
-# add MP4 tag with atomicparsley
-sub tag_file_mp4 {
-	my ($self, $meta, $tags) = @_;
-	ap_init();
-	# Only tag if the required tool exists
-	if ( ! main::exists_in_path( 'atomicparsley' ) ) {
-		main::logger "WARNING: Required AtomicParsley utility not found - cannot tag \U$meta->{ext}\E file\n";
-		return 1;
-	}
-	main::logger "INFO: Tagging \U$meta->{ext}\E\n";
-	# handle embedded quotes
-	tags_escape_quotes($tags);
-	# encode metadata for atomicparsley
-	tags_encode($tags) unless $opt->{tag_utf8} || $opt->{myaputf8};
-	# build atomicparsley command
+sub tag_cmd {
+	my ($meta, $tags, $desc_file) = @_;
 	my @cmd = (
 		$bin->{atomicparsley},
 		$meta->{filename},
@@ -9480,17 +9531,7 @@ sub tag_file_mp4 {
 		'--year', $tags->{year},
 		'--tracknum', $tags->{tracknum},
 		'--disk', $tags->{disk},
-		'--lyrics', $tags->{lyrics},
 	);
-	# add descriptions to audio podcasts and video
-	if ( $tags->{is_video} || $tags->{is_podcast}) {
-		push @cmd, ('--description', $tags->{description} );
-		if ( $opt->{myaplongdescription} ) {
-			push @cmd, ( '--longDescription', $tags->{longDescription} );
-		} elsif ( $opt->{myaplongdesc} ) {
-			push @cmd, ( '--longdesc', $tags->{longDescription} );
-		}
-	}
 	# video only
 	if ( $tags->{is_video} ) {
 		# all video
@@ -9519,9 +9560,74 @@ sub tag_file_mp4 {
 	unless ( $opt->{noartwork} ) {
 		push @cmd, ( '--artwork', $meta->{thumbfile} ) if -f $meta->{thumbfile};
 	}
-	# run atomicparsley command
+	# add descriptions to audio podcasts and video
+	if ( $tags->{is_video} || $tags->{is_podcast} ) {
+		push @cmd, ( '--description', $tags->{description} );
+		if ( $opt->{myaplongdescfile} && -f $desc_file ) {
+				push @cmd, ( '--longdescFile', $desc_file );
+		} else {
+			if ( $opt->{myaplongdescription} ) {
+				push @cmd, ( '--longDescription', $tags->{longDescription} );
+			} elsif ( $opt->{myaplongdesc} ) {
+				push @cmd, ( '--longdesc', $tags->{longDescription} );
+			}
+		}
+	}
+	if ( $opt->{myaplyricsfile} && -f $desc_file ) {
+		push @cmd, ( '--lyricsFile', $desc_file );
+	} else {
+		push @cmd, ( '--lyrics', $tags->{lyrics} );
+	}
+	for ( @cmd ) {
+		$_ = "" unless defined $_;
+	}
+	return @cmd;
+}
+
+# add MP4 tag with atomicparsley
+sub tag_file_mp4 {
+	my ($self, $meta, $tags) = @_;
+	tag_init();
+	# Only tag if the required tool exists
+	if ( ! main::exists_in_path( 'atomicparsley' ) ) {
+		main::logger "WARNING: Required AtomicParsley utility not found - cannot tag \U$meta->{ext}\E file\n";
+		return 1;
+	}
+	main::logger "INFO: Tagging \U$meta->{ext}\E\n";
+	my @cmd;
+	my $rc;
 	my $run_mode = main::hide_progress() || ! $opt->{verbose} ? 'QUIET_STDOUT' : 'STDERR';
-	if ( main::run_cmd( $run_mode, @cmd ) ) {
+	if ( IS_WIN32 && ! $opt->{tag_nounicode} ) {
+		if ( $opt->{myaplongdescfile} && $opt->{myaplyricsfile} ) {
+			my $desc_file = main::encode_fs(File::Spec->catfile($meta->{dir}, "$meta->{fileprefix}.desc.txt") );
+			unlink $desc_file;
+			if ( open( DESC, ">:raw:utf8", $desc_file ) ) {
+				print DESC $tags->{longDescription};
+				close DESC;
+				@cmd = tag_cmd($meta, $tags, $desc_file);
+				$rc = main::run_cmd_win32( $run_mode, @cmd );
+				if ( $rc ) {
+					main::logger "WARNING: Unicode tagging failed - falling back to non-Unicode\n";
+				}
+			} else {
+				main::logger "WARNING: Could not create temp description file: $desc_file\n";
+				main::logger "WARNING: Unicode tagging unavailable - falling back to non-Unicode\n";
+				$rc = 1;
+			}
+			unlink $desc_file;
+		} else {
+			main::logger "WARNING: Unicode tagging unsupported - falling back to non-Unicode\n";
+			$rc = 1;
+		}
+	}
+	if ( ! IS_WIN32 || $opt->{tag_nounicode} || $rc ) {
+		if ( IS_WIN32 ) {
+			tags_encode($tags, $opt->{tag_encoding} || "cp1252");
+		}
+		@cmd = tag_cmd( $meta, $tags );
+		$rc = main::run_cmd( $run_mode, @cmd );
+	}
+	if ( $rc ) {
 		main::logger "WARNING: Failed to tag \U$meta->{ext}\E file\n";
 		return 2;
 	}

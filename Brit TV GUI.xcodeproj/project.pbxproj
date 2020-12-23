@@ -21,6 +21,10 @@
 		BF065A3E1EE0669C00F54636 /* This Release in Resources */ = {isa = PBXBuildFile; fileRef = BF065A3D1EE0669C00F54636 /* This Release */; };
 		BF065A411EE1CEA100F54636 /* ProgrammeCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BF065A401EE1CEA100F54636 /* ProgrammeCache.m */; };
 		BF065A441EE5FEB300F54636 /* DownloadHistoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = BF065A431EE5FEB300F54636 /* DownloadHistoryCache.m */; };
+		BF314C7B2592E6CE00064BEB /* This Fix.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF314C7A2592E6CE00064BEB /* This Fix.rtf */; };
+		BF314C832592F66A00064BEB /* get_iplayer.pl in Resources */ = {isa = PBXBuildFile; fileRef = BF314C822592F66A00064BEB /* get_iplayer.pl */; };
+		BF314C842592F7C100064BEB /* youtube-dl in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF314C802592F01B00064BEB /* youtube-dl */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		BF314C852592F7C900064BEB /* ffmpeg in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF314C7E2592EA9300064BEB /* ffmpeg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BF382ED21D73C23400BAF106 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF382ED11D73C23400BAF106 /* AppController.m */; };
 		BF382EDE1D73C30400BAF106 /* GetITVListings.m in Sources */ = {isa = PBXBuildFile; fileRef = BF382EDD1D73C30400BAF106 /* GetITVListings.m */; };
 		BF382EE31D73C36300BAF106 /* NPHistoryWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF382EE21D73C36300BAF106 /* NPHistoryWindow.xib */; };
@@ -48,11 +52,7 @@
 		DFC865E213E96BE200606599 /* ReasonForFailure.m in Sources */ = {isa = PBXBuildFile; fileRef = DFC865E113E96BE200606599 /* ReasonForFailure.m */; };
 		DFFF196713E96288007B52AC /* ReasonsForFailure.plist in Resources */ = {isa = PBXBuildFile; fileRef = DFFF196613E96288007B52AC /* ReasonsForFailure.plist */; };
 		E3506C44224579CB004A964B /* rtmpdump in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3506C3F2245797E004A964B /* rtmpdump */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		E3D077832260FC0F00BC0BE2 /* ffmpeg in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D077802260FBA500BC0BE2 /* ffmpeg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		E3D077842260FC1600BC0BE2 /* youtube-dl in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D077822260FBFA00BC0BE2 /* youtube-dl */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		E3D3404B232AD439008C1C60 /* GetiPlayerDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D3404A232AD439008C1C60 /* GetiPlayerDownload.m */; };
-		E3D34053232D6D95008C1C60 /* AtomicParsley in Resources */ = {isa = PBXBuildFile; fileRef = E3D34052232D6D95008C1C60 /* AtomicParsley */; };
-		E3D34055232D6DB5008C1C60 /* get_iplayer.pl in Resources */ = {isa = PBXBuildFile; fileRef = E3D34054232D6DB5008C1C60 /* get_iplayer.pl */; };
 		E3D34057232D6F55008C1C60 /* perl5 in Resources */ = {isa = PBXBuildFile; fileRef = E3D34056232D6F55008C1C60 /* perl5 */; };
 		E3D34058232D6F75008C1C60 /* AtomicParsley in CopyFiles */ = {isa = PBXBuildFile; fileRef = E3D34052232D6D95008C1C60 /* AtomicParsley */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -64,9 +64,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				BF314C852592F7C900064BEB /* ffmpeg in CopyFiles */,
+				BF314C842592F7C100064BEB /* youtube-dl in CopyFiles */,
 				E3D34058232D6F75008C1C60 /* AtomicParsley in CopyFiles */,
-				E3D077842260FC1600BC0BE2 /* youtube-dl in CopyFiles */,
-				E3D077832260FC0F00BC0BE2 /* ffmpeg in CopyFiles */,
 				E3506C44224579CB004A964B /* rtmpdump in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,6 +111,10 @@
 		BF065A401EE1CEA100F54636 /* ProgrammeCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgrammeCache.m; sourceTree = "<group>"; };
 		BF065A421EE5FEB300F54636 /* DownloadHistoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadHistoryCache.h; sourceTree = "<group>"; };
 		BF065A431EE5FEB300F54636 /* DownloadHistoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadHistoryCache.m; sourceTree = "<group>"; };
+		BF314C7A2592E6CE00064BEB /* This Fix.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "This Fix.rtf"; sourceTree = "<group>"; };
+		BF314C7E2592EA9300064BEB /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ffmpeg; sourceTree = "<group>"; };
+		BF314C802592F01B00064BEB /* youtube-dl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "youtube-dl"; sourceTree = "<group>"; };
+		BF314C822592F66A00064BEB /* get_iplayer.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = get_iplayer.pl; sourceTree = "<group>"; };
 		BF382ED01D73C21500BAF106 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		BF382ED11D73C23400BAF106 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		BF382EDC1D73C2FB00BAF106 /* GetITVListings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetITVListings.h; sourceTree = "<group>"; };
@@ -156,12 +160,9 @@
 		DFC865E113E96BE200606599 /* ReasonForFailure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReasonForFailure.m; sourceTree = "<group>"; };
 		DFFF196613E96288007B52AC /* ReasonsForFailure.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ReasonsForFailure.plist; sourceTree = "<group>"; };
 		E3506C3F2245797E004A964B /* rtmpdump */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = rtmpdump; sourceTree = "<group>"; };
-		E3D077802260FBA500BC0BE2 /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ffmpeg; sourceTree = "<group>"; };
-		E3D077822260FBFA00BC0BE2 /* youtube-dl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "youtube-dl"; sourceTree = "<group>"; };
 		E3D34049232AD439008C1C60 /* GetiPlayerDownload.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetiPlayerDownload.h; sourceTree = "<group>"; };
 		E3D3404A232AD439008C1C60 /* GetiPlayerDownload.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetiPlayerDownload.m; sourceTree = "<group>"; };
 		E3D34052232D6D95008C1C60 /* AtomicParsley */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = AtomicParsley; sourceTree = "<group>"; };
-		E3D34054232D6DB5008C1C60 /* get_iplayer.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = get_iplayer.pl; sourceTree = "<group>"; };
 		E3D34056232D6F55008C1C60 /* perl5 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = perl5; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -226,6 +227,7 @@
 		29B97314FDCFA39411CA2CEA /* Get_iPlayer GUI */ = {
 			isa = PBXGroup;
 			children = (
+				BF314C7A2592E6CE00064BEB /* This Fix.rtf */,
 				BF065A3D1EE0669C00F54636 /* This Release */,
 				D9F97FE9198EBA73006494A3 /* Categories */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -280,12 +282,12 @@
 		D904F04D1009F28400D60BBF /* Binaries */ = {
 			isa = PBXGroup;
 			children = (
+				BF314C822592F66A00064BEB /* get_iplayer.pl */,
+				BF314C802592F01B00064BEB /* youtube-dl */,
+				BF314C7E2592EA9300064BEB /* ffmpeg */,
 				E3D34056232D6F55008C1C60 /* perl5 */,
 				E3D34052232D6D95008C1C60 /* AtomicParsley */,
-				E3D077802260FBA500BC0BE2 /* ffmpeg */,
-				E3D077822260FBFA00BC0BE2 /* youtube-dl */,
 				E3506C3F2245797E004A964B /* rtmpdump */,
-				E3D34054232D6DB5008C1C60 /* get_iplayer.pl */,
 			);
 			path = Binaries;
 			sourceTree = "<group>";
@@ -425,9 +427,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3D34053232D6D95008C1C60 /* AtomicParsley in Resources */,
+				BF314C832592F66A00064BEB /* get_iplayer.pl in Resources */,
 				39FD5E9619D370BD006BC47B /* Images.xcassets in Resources */,
-				E3D34055232D6DB5008C1C60 /* get_iplayer.pl in Resources */,
+				BF314C7B2592E6CE00064BEB /* This Fix.rtf in Resources */,
 				396FDA611DA98179003F3F57 /* MainMenu.xib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				BF065A3E1EE0669C00F54636 /* This Release in Resources */,
@@ -547,7 +549,7 @@
 					"$(PROJECT_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 4.1.2;
+				MARKETING_VERSION = "4.1.2-HF2";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CODE_SIGN_FLAGS = "--no-strict";
 				OTHER_LDFLAGS = "-licucore";
@@ -589,7 +591,7 @@
 					"$(PROJECT_DIR)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 4.1.2;
+				MARKETING_VERSION = "4.1.2-HF2";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CODE_SIGN_FLAGS = "--no-strict";
 				OTHER_LDFLAGS = "-licucore";

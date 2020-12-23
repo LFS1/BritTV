@@ -38,7 +38,7 @@
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "D273A746-CE31-4DD4-BC3D-135D64B9FF4B - f12d52ef56eb9733"
+                  uuid = "D273A746-CE31-4DD4-BC3D-135D64B9FF4B - ea00a88d1965ba5f"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -54,7 +54,7 @@
                   offsetFromSymbolStart = "86">
                </Location>
                <Location
-                  uuid = "D273A746-CE31-4DD4-BC3D-135D64B9FF4B - f12d52ef56eb9733"
+                  uuid = "D273A746-CE31-4DD4-BC3D-135D64B9FF4B - ea00a88d1965ba5f"
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -85,8 +85,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "252"
             endingLineNumber = "252"
-            landmarkName = "YoutubeDLDownload"
-            landmarkType = "3">
+            landmarkName = "-getProgrammeTaskFinished:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -425,8 +425,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "252"
             endingLineNumber = "252"
-            landmarkName = "YoutubeDLDownload"
-            landmarkType = "3">
+            landmarkName = "-getProgrammeTaskFinished:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

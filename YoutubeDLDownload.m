@@ -61,7 +61,7 @@ extern  LogController *theLogger;
 										@"--no-part",
 										@"--format=best",
 										[show programmeURL],
-										@"--external-downloader-args=-stats -loglevel fatal",
+										@"--external-downloader-args=-stats -loglevel fatal -fflags +igndts",
 										[NSString stringWithFormat:@"--output=%@.%%(duration)s", show.tempMp4Path],
 										nil];
 	
