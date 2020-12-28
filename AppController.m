@@ -66,7 +66,7 @@ LogController *theLogger;
     defaultValues[@"CacheBBC_TV"] = @YES;
     defaultValues[@"CacheITV_TV"] = @YES;
     defaultValues[@"GetiPlayer"] = @NO;
-    defaultValues[@"AutoPilotHours"] = @"0";
+    defaultValues[@"AutoPiAutoPillotHours"] = @"0";
     defaultValues[@"AutoPilotAbandonCount"] = @"10";
     defaultValues[@"CacheExpiryTime"] = @"1";
 	defaultValues[@"numberConcurrentITVDownloads"] = @"1";
@@ -202,7 +202,7 @@ LogController *theLogger;
 {
     autoStartMinuteOutlet.stringValue = [NSString stringWithFormat:@"%d", --autoStartMinuteCount];
     
-    if (autoStartMinuteCount > 3500)
+    if (autoStartMinuteCount > 0)
         return;
     
     autoStartMinuteCount = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotHours"] intValue]*3600;

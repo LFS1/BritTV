@@ -24,7 +24,6 @@
 		BF314C7B2592E6CE00064BEB /* This Fix.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BF314C7A2592E6CE00064BEB /* This Fix.rtf */; };
 		BF314C832592F66A00064BEB /* get_iplayer.pl in Resources */ = {isa = PBXBuildFile; fileRef = BF314C822592F66A00064BEB /* get_iplayer.pl */; };
 		BF314C842592F7C100064BEB /* youtube-dl in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF314C802592F01B00064BEB /* youtube-dl */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		BF314C852592F7C900064BEB /* ffmpeg in CopyFiles */ = {isa = PBXBuildFile; fileRef = BF314C7E2592EA9300064BEB /* ffmpeg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BF382ED21D73C23400BAF106 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF382ED11D73C23400BAF106 /* AppController.m */; };
 		BF382EDE1D73C30400BAF106 /* GetITVListings.m in Sources */ = {isa = PBXBuildFile; fileRef = BF382EDD1D73C30400BAF106 /* GetITVListings.m */; };
 		BF382EE31D73C36300BAF106 /* NPHistoryWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF382EE21D73C36300BAF106 /* NPHistoryWindow.xib */; };
@@ -32,6 +31,7 @@
 		BF582898201E317C00EFEC3F /* YoutubeDLDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = BF582897201E317C00EFEC3F /* YoutubeDLDownload.m */; };
 		BF6DE5F720D0003B004BA9DA /* PageData.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6DE5F620D0003B004BA9DA /* PageData.m */; };
 		BFA3B40E1EB53CBE0047FFEB /* getBBCListings.m in Sources */ = {isa = PBXBuildFile; fileRef = BFA3B40D1EB53CBE0047FFEB /* getBBCListings.m */; };
+		BFDC796A259A87CD0016770E /* ffmpeg in CopyFiles */ = {isa = PBXBuildFile; fileRef = BFDC7968259A877A0016770E /* ffmpeg */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		BFDF8E3D1EB802F500B76603 /* ProgramHistoryObject.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDF8E3C1EB802F500B76603 /* ProgramHistoryObject.m */; };
 		BFDF8E401EB8040900B76603 /* NewProgrammeHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDF8E3F1EB8040900B76603 /* NewProgrammeHistory.m */; };
 		BFDF8E431EB8053000B76603 /* ProgrammeData.m in Sources */ = {isa = PBXBuildFile; fileRef = BFDF8E421EB8053000B76603 /* ProgrammeData.m */; };
@@ -64,7 +64,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				BF314C852592F7C900064BEB /* ffmpeg in CopyFiles */,
+				BFDC796A259A87CD0016770E /* ffmpeg in CopyFiles */,
 				BF314C842592F7C100064BEB /* youtube-dl in CopyFiles */,
 				E3D34058232D6F75008C1C60 /* AtomicParsley in CopyFiles */,
 				E3506C44224579CB004A964B /* rtmpdump in CopyFiles */,
@@ -112,7 +112,6 @@
 		BF065A421EE5FEB300F54636 /* DownloadHistoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadHistoryCache.h; sourceTree = "<group>"; };
 		BF065A431EE5FEB300F54636 /* DownloadHistoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadHistoryCache.m; sourceTree = "<group>"; };
 		BF314C7A2592E6CE00064BEB /* This Fix.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = "This Fix.rtf"; sourceTree = "<group>"; };
-		BF314C7E2592EA9300064BEB /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ffmpeg; sourceTree = "<group>"; };
 		BF314C802592F01B00064BEB /* youtube-dl */ = {isa = PBXFileReference; lastKnownFileType = file; path = "youtube-dl"; sourceTree = "<group>"; };
 		BF314C822592F66A00064BEB /* get_iplayer.pl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = get_iplayer.pl; sourceTree = "<group>"; };
 		BF382ED01D73C21500BAF106 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
@@ -128,6 +127,7 @@
 		BF6DE5F620D0003B004BA9DA /* PageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PageData.m; sourceTree = "<group>"; };
 		BFA3B40D1EB53CBE0047FFEB /* getBBCListings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = getBBCListings.m; sourceTree = "<group>"; };
 		BFA3B40F1EB53E800047FFEB /* getBBCListings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getBBCListings.h; sourceTree = "<group>"; };
+		BFDC7968259A877A0016770E /* ffmpeg */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ffmpeg; sourceTree = "<group>"; };
 		BFDF8E3C1EB802F500B76603 /* ProgramHistoryObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramHistoryObject.m; sourceTree = "<group>"; };
 		BFDF8E3E1EB8037800B76603 /* ProgrammeHistoryObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgrammeHistoryObject.h; sourceTree = "<group>"; };
 		BFDF8E3F1EB8040900B76603 /* NewProgrammeHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewProgrammeHistory.m; sourceTree = "<group>"; };
@@ -282,9 +282,9 @@
 		D904F04D1009F28400D60BBF /* Binaries */ = {
 			isa = PBXGroup;
 			children = (
+				BFDC7968259A877A0016770E /* ffmpeg */,
 				BF314C822592F66A00064BEB /* get_iplayer.pl */,
 				BF314C802592F01B00064BEB /* youtube-dl */,
-				BF314C7E2592EA9300064BEB /* ffmpeg */,
 				E3D34056232D6F55008C1C60 /* perl5 */,
 				E3D34052232D6D95008C1C60 /* AtomicParsley */,
 				E3506C3F2245797E004A964B /* rtmpdump */,
