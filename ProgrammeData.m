@@ -54,6 +54,7 @@ extern  LogController *theLogger;
 	self.progressMinValue = 0.0;
 	self.progressMaxValue = 100.0;
 	self.downloadStatus = NotStarted;
+	self.downloadFailCount = 0;
 	
 	return self;
 }

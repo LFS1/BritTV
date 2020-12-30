@@ -55,7 +55,7 @@
 @property double progressMinValue;
 @property BOOL statusIsHidden;
 @property BOOL displayInfoIsHidden;
-
+@property int downloadFailCount;
 
 
 

@@ -131,6 +131,7 @@
     IBOutlet NSTextField *downloadFailCountOutlet;
     IBOutlet NSTextField *downloadSuccessCountOutlet;
     IBOutlet NSTextField *autoStartMinuteOutlet;
+	IBOutlet NSTextField *location;
 }
 
 @property   IBOutlet NSProgressIndicator *itvProgressIndicator;

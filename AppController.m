@@ -21,6 +21,7 @@
 #import "SeriesLink.h"
 #import "DownloadHistoryEntry.h"
 
+
 static AppController *sharedInstance;
 
 bool runDownloads=NO;
@@ -71,7 +72,10 @@ LogController *theLogger;
     defaultValues[@"CacheExpiryTime"] = @"1";
 	defaultValues[@"numberConcurrentITVDownloads"] = @"1";
 	defaultValues[@"numberConcurrentBBCDownloads"] = @"1";
+	defaultValues[@"numberITVRetries"] = @"3";
+	defaultValues[@"numberBBCRetries"] = @"3";
     defaultValues[@"Verbose"] = @NO;
+	defaultValues[@"IgnoreGeoPositionService"] = @NO;
     defaultValues[@"SeriesLinkStartup"] = @YES;
     defaultValues[@"BBCOne"] = @YES;
     defaultValues[@"BBCTwo"] = @YES;
@@ -123,6 +127,7 @@ LogController *theLogger;
 #pragma mark Delegate Methods
 - (void)awakeFromNib
 {
+	[self amInUk];
 	theLogger = logger;
 	newITVListing =  [[GetITVShows alloc] init];
 	newBBCListing =  [[GetBBCShows alloc]init];
@@ -206,7 +211,10 @@ LogController *theLogger;
         return;
     
     autoStartMinuteCount = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotHours"] intValue]*3600;
-    
+	
+	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"IgnoreGeoPositionService"] == false && [self amInUk] == false )
+		return;
+
     if (runDownloads || runUpdate )
         return;
 
@@ -698,6 +706,21 @@ LogController *theLogger;
 #pragma mark Download Controller
 - (IBAction)startDownloads:(id)sender
 {
+	
+	
+	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"IgnoreGeoPositionService"] == false && [self amInUk] == false)
+	{
+		NSAlert *alert = [[NSAlert alloc]init];
+		alert.messageText = @"You are not in the UK?";
+		alert.informativeText = @"Your downloads will likely fail - Do you want to continue";
+		[alert addButtonWithTitle:@"No"];
+		[alert addButtonWithTitle:@"Yes"];
+		NSModalResponse response = [alert runModal];
+		
+		if (response == NSAlertFirstButtonReturn)
+			return;
+	}
+
     [self saveAppData]; //Save data in case of crash.
 	runDownloads = NO;
 	BOOL foundOne=NO;
@@ -900,7 +923,7 @@ LogController *theLogger;
 		[_solutionsArrayController addObject:showSolution];
 		[solutionsTableView setRowHeight:68];
 	}
-        
+	
 	[self saveAppData]; //Save app data in case of crash.
         
 	NSArray *tempQueue = [queueController arrangedObjects];
@@ -1216,7 +1239,10 @@ LogController *theLogger;
     [sharedDefaults removeObjectForKey:@"CacheExpiryTime"];
 	[sharedDefaults removeObjectForKey:@"numberConcurrentITVDownloads"];
 	[sharedDefaults removeObjectForKey:@"numberConcurrentBBCDownloads"];
+	[sharedDefaults removeObjectForKey:@"numberITVRetries"];
+	[sharedDefaults removeObjectForKey:@"numberBBCRetries"];
     [sharedDefaults removeObjectForKey:@"Verbose"];
+	[sharedDefaults removeObjectForKey:@"IgnoreGeoPositionService"];
     [sharedDefaults removeObjectForKey:@"SeriesLinkStartup"];
     [sharedDefaults removeObjectForKey:@"BBCOne"];
     [sharedDefaults removeObjectForKey:@"BBCTwo"];
@@ -1625,5 +1651,42 @@ LogController *theLogger;
 
 
 #pragma mark Properties
+
+-(bool)amInUk
+{
+
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://iplocation.com"]];
+	NSData *data = [[NSData alloc] initWithContentsOfURL:url];
+	NSString *pageContent = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+	NSScanner *scanner = [[NSScanner alloc]initWithString:pageContent];
+	
+	NSString *country;
+	[scanner scanUpToString:@"\"country_name\">" intoString:NULL];
+	[scanner scanString:@"\"country_name\">"  intoString:NULL];
+	[scanner scanUpToString:@"<" intoString:&country];
+						  
+	NSString *region;
+	[scanner scanUpToString:@"\"region_name\">" intoString:NULL];
+	[scanner scanString:@"\"region_name\">"  intoString:NULL];
+	[scanner scanUpToString:@"<" intoString:&region];
+						  
+	NSString *city;
+	[scanner scanUpToString:@"\"city\">" intoString:NULL];
+	[scanner scanString:@"\"city\">"  intoString:NULL];
+	[scanner scanUpToString:@"<" intoString:&city];
+	
+	location.stringValue = [NSString stringWithFormat:@"%@ (%@, %@)", country, city, region];
+	
+	if ( [country isEqualTo:@"United Kingdom"] )
+		location.textColor = [NSColor blackColor];
+	else
+		location.textColor = [NSColor redColor];
+	
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IgnoreGeoPositionService"] == true)
+		return true;
+	
+	return [country isEqualTo:@"United Kingdom"];
+}
+
 
 @end

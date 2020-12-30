@@ -22,17 +22,10 @@ extern  LogController *theLogger;
 	addFailedDownloadToHistory = false;
 
 	show = tempShow;
+	show.downloadFailCount = 0;
 
-	show.reasonForFailure = @"";
 	[self logActivity:@"Starting"];
 	
-	show.downloadStatus = Started;
-	show.displayInfoIsHidden = YES;
-	show.progressIsHidden = NO;
-	show.progressDoubleValue = 0.0;
-	show.statusIsHidden = NO;
-	show.status = @"Starting download: Getting Metadata";
-
 	if ( [show.tvNetwork containsString:@"BBC"] )
 		[self getBBCEpisodeDetails];
 	else
@@ -40,8 +33,17 @@ extern  LogController *theLogger;
 	
 	return self;
 }
+
 -(void)startDownload
 {
+	
+	show.reasonForFailure = @"";
+	show.downloadStatus = Started;
+	show.displayInfoIsHidden = YES;
+	show.progressIsHidden = NO;
+	show.progressDoubleValue = 0.0;
+	show.statusIsHidden = NO;
+	show.status = @"Starting download: Getting Metadata";
 	
 	[show makeEpisodeName];
 	
@@ -270,6 +272,18 @@ extern  LogController *theLogger;
 	}
 	else
 	{
+		
+		// issue n retries before final fail
+		
+		if ( ([show.tvNetwork containsString:@"BBC"] && (show.downloadFailCount < [[[NSUserDefaults standardUserDefaults] objectForKey:@"numberBBCRetries"] intValue])) ||
+			 ([show.tvNetwork containsString:@"ITV"] && (show.downloadFailCount < [[[NSUserDefaults standardUserDefaults] objectForKey:@"numberITVRetries"] intValue]))    )
+		{
+			show.downloadFailCount++;
+			[theLogger addToLog:[NSString stringWithFormat:@"INFO: download of %@ failed - attempting retry # %d", show.shortEpisodeName, show.downloadFailCount]];
+			[self startDownload];
+			return;
+		}
+		
 		show.downloadStatus = FinishedWithError;
 		[self logActivity:@"Finshed: with bad exit code"];
 		[theLogger addToLog:[NSString stringWithFormat:@"Programme %@ task terminated with Exit Code (%d)", show.programmeName, [finishedNote.object terminationStatus]]];
