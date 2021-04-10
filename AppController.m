@@ -212,7 +212,7 @@ LogController *theLogger;
     
     autoStartMinuteCount = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AutoPilotHours"] intValue]*3600;
 	
-	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"IgnoreGeoPositionService"] == false && [self amInUk] == false )
+	if ( [self amInUk] == false )
 		return;
 
     if (runDownloads || runUpdate )
@@ -708,7 +708,7 @@ LogController *theLogger;
 {
 	
 	
-	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"IgnoreGeoPositionService"] == false && [self amInUk] == false)
+	if ([self amInUk] == false)
 	{
 		NSAlert *alert = [[NSAlert alloc]init];
 		alert.messageText = @"You are not in the UK?";
@@ -1654,36 +1654,55 @@ LogController *theLogger;
 
 -(bool)amInUk
 {
-
+	
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IgnoreGeoPositionService"] == true)
+	{
+		location.stringValue = @"Location Unknown";
+		location.textColor = [NSColor grayColor];
+		return true;
+	}
+	
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://iplocation.com"]];
 	NSData *data = [[NSData alloc] initWithContentsOfURL:url];
 	NSString *pageContent = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
 	NSScanner *scanner = [[NSScanner alloc]initWithString:pageContent];
 	
+	NSString *locationString = @"";
+	
 	NSString *country;
 	[scanner scanUpToString:@"\"country_name\">" intoString:NULL];
 	[scanner scanString:@"\"country_name\">"  intoString:NULL];
 	[scanner scanUpToString:@"<" intoString:&country];
+	
+	if (country != NULL)
+		locationString = country;
 						  
 	NSString *region;
 	[scanner scanUpToString:@"\"region_name\">" intoString:NULL];
 	[scanner scanString:@"\"region_name\">"  intoString:NULL];
 	[scanner scanUpToString:@"<" intoString:&region];
-						  
+	
 	NSString *city;
 	[scanner scanUpToString:@"\"city\">" intoString:NULL];
 	[scanner scanString:@"\"city\">"  intoString:NULL];
 	[scanner scanUpToString:@"<" intoString:&city];
 	
-	location.stringValue = [NSString stringWithFormat:@"%@ (%@, %@)", country, city, region];
+	if ( [city isEqualToString:region])
+		city = NULL;
+		
+	if (city != NULL && region != NULL)
+		locationString = [NSString stringWithFormat:@"%@ (%@, %@)", country, city, region];
+	else if (city != NULL)
+		locationString = [NSString stringWithFormat:@"%@ (%@)", country, city];
+	else if (region != NULL)
+		locationString = [NSString stringWithFormat:@"%@ (%@)", country, region];
+	
+	location.stringValue = locationString;
 	
 	if ( [country isEqualTo:@"United Kingdom"] )
 		location.textColor = [NSColor blackColor];
 	else
 		location.textColor = [NSColor redColor];
-	
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IgnoreGeoPositionService"] == true)
-		return true;
 	
 	return [country isEqualTo:@"United Kingdom"];
 }

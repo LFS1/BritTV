@@ -51,7 +51,7 @@ extern  LogController *theLogger;
                     [NSString stringWithFormat:@"--pid=%@", show.productionId],
                     [NSString stringWithFormat:@"--output=%@", show.downloadPath],
                     [NSString stringWithFormat:@"--fileprefix=%@",[show.mp4FileName stringByReplacingOccurrencesOfString:@".mp4" withString:@""]],
-                    [NSString stringWithFormat:@"--ffmpeg=%@", [executablesPath stringByAppendingPathComponent:@"ffmpeg"]],
+                    [NSString stringWithFormat:@"--ffmpeg=%@", [executablesPath stringByAppendingPathComponent:@"ffmpeg_bbc"]],
                     [NSString stringWithFormat:@"--atomicparsley=%@", [executablesPath stringByAppendingPathComponent:@"AtomicParsley"]],
                     @"--nocopyright",
                     @"--nopurge",
@@ -161,6 +161,7 @@ extern  LogController *theLogger;
     if (!output.length)
         return;
     
+	
     if ( [output containsString:@"ETA"] )
     {
         /* 63.2% of ~75.07 MB @   7.9 Mb/s ETA: 00:00:27 (hvfhd1/ll) [audio+video] */
@@ -289,6 +290,7 @@ extern  LogController *theLogger;
 
 - (void)addToLog:(NSString *)logMessage noTag:(BOOL)b
 {
+
     if (b)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"AddToLog" object:nil userInfo:@{@"message": logMessage}];

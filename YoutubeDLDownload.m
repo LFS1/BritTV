@@ -337,7 +337,7 @@ extern  LogController *theLogger;
 	NSError *error;
 	
 	[youTubeTask launchAndReturnError:&error];
-	
+
 	if ( error )
 		NSLog(@"Launch Task Error %@", error);
 	

@@ -1,4 +1,19 @@
-Added (Build 4.1.2)
+Build 4.1.4
+	1) HOTFIX-003 January 2021 - items addressed
+		1) Multi page BBC index files not picking up page 2 onwards
+
+Build 4.1.3
+	1) HOTFIX-002 - December 2020
+		1) Included custom FFMPEG version (LFS-HF01-12-20-2020) that retries failed HLS segments(this was causing lots of glitches on ITV as ffmpeg was just ignoring the entire segment and moving on to the next one)
+		2) Updated youtube-dl to latest version
+		3) Updated get_iplayer to latest version
+		4) Cleaned up display to cope with the many OSX updates that have occurred since I last worked on this
+		5) Added in a re-try feature for running youtube-dl on ITV as it often (& annoyingly) seems to fail on first attempt!
+		6) Added a geo position feature so that BritTv warns before downloading if not in in UK
+		7) Added controls to configuration screen for items 5 & 6
+	2) Minor tweaks to hotfix 2
+
+Build 4.1.2
 	Updated getBBCListings & getIplayerDownload to support latest round of changes from bbc website
 	Updated get_iPlayer to latest (3.24)
 	Updated youtube-dl to latest (20.01.01)

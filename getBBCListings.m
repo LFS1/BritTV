@@ -99,7 +99,7 @@ extern  LogController *theLogger;
     myQueueLeft--;
 	
     NSArray *programmePages = @[@"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n", @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"0-9"];
-    
+	
 	todayProgrammeArray = [[NSMutableArray alloc]init];
     
 	myQueueLeft += programmePages.count;
@@ -108,13 +108,16 @@ extern  LogController *theLogger;
     /* Cycle through channels loading programme pages  */
 
 	for (int i=0; i < programmePages.count; i++) {
-	
+
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.bbc.co.uk/iplayer/a-z/%@", programmePages[i]]];
 		
-        [[mySession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		[[mySession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			
 			pagesRead++;
 			myQueueLeft--;
+			
+			int pageNumber = 1;
+			int totalPages = 0;
 			
 			if ( error )  {
 				NSString *reason = [NSString stringWithFormat:@"Unable to load BBC Index page error code %@", error];
@@ -122,24 +125,49 @@ extern  LogController *theLogger;
 				[self processProgrammePage:@"" :url :programmePages[i]];
 			}
 			else {
-            	NSString *thePage  = [[NSString alloc]initWithData:data encoding:NSASCIIStringEncoding];
-            	thePage = [thePage stringByDecodingHTMLEntities];
-                [self processProgrammePage:thePage :url :programmePages[i]];
+				NSString *thePage  = [[NSString alloc]initWithData:data encoding:NSASCIIStringEncoding];
+				thePage = [thePage stringByDecodingHTMLEntities];
+				totalPages = [self processProgrammePage:thePage :url :programmePages[i]];
 			}
-            
-            [self updateProgressBar];
-            
-        }] resume];
+
+			if (totalPages > 1) {
+				myQueueSize += totalPages -1;
+				myQueueLeft += totalPages -1;
+			}
+			
+			while (pageNumber++ < totalPages) {
+				
+				NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.bbc.co.uk/iplayer/a-z/%@?page=%d", programmePages[i], pageNumber]];
+				
+				[[mySession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+					
+					myQueueLeft--;
+					pagesRead++;
+						
+					if ( error )  {
+						NSString *reason = [NSString stringWithFormat:@"Unable to load BBC Index page error code %@", error];
+						[self reportProcessingError:[NSString stringWithFormat:@"%@",url] andWithREASON:reason];
+						[self processProgrammePage:@"" :url :programmePages[i]];
+					}
+					else {
+						NSString *thePage  = [[NSString alloc]initWithData:data encoding:NSASCIIStringEncoding];
+						thePage = [thePage stringByDecodingHTMLEntities];
+						[self processProgrammePage:thePage :url :programmePages[i]];
+					}
+				}] resume];
+			}
+			[self updateProgressBar];
+		}] resume];
     }
 }
 
--(void)processProgrammePage:(NSString *)thePage :(NSURL *)theURL :(NSString *)thePageLetter
+-(int)processProgrammePage:(NSString *)thePage :(NSURL *)theURL :(NSString *)thePageLetter
 {
 	if ( thePage.length == 0 )  {
 		if ( !myQueueLeft )
 			[self mergeAllProgrammes];
 		
-		return;
+		return 0;
 	}
     
     NSScanner *scanner = [NSScanner scannerWithString:thePage];
@@ -162,7 +190,7 @@ extern  LogController *theLogger;
         if ( !myQueueLeft )
             [self mergeAllProgrammes];
         
-        return;
+        return 0;
     }
     
     /* Loop through and pick up each programme */
@@ -236,13 +264,22 @@ extern  LogController *theLogger;
             
         [scanner scanUpToString:@"{\"props\":" intoString:NULL];
     }
-        
-    if (  programmesFound  != numberProgrammes )
-		[self reportProcessingError:[NSString stringWithFormat:@"%@", theURL] andWithREASON:[NSString stringWithFormat:@"Warning: Programmes expected/found do not match (%d/%d)", numberProgrammes, programmesFound]];
-    
+	
+	/* Get number of pages */
+	
+	int totalPages;
+	
+	scanner.scanLocation = 1;
+	[scanner scanUpToString:@"\"pagination\":" intoString:NULL];
+	[scanner scanUpToString:@"\"totalPages\":" intoString:NULL];
+	[scanner scanString:@"\"totalPages\":" intoString:NULL];
+	[scanner scanInt:&totalPages];
+	
 	if (!myQueueLeft)
-        [self mergeAllProgrammes];
-    
+		[self mergeAllProgrammes];
+        
+	return  totalPages;
+
 }
 
 -(void)getBBCEpisodesNew:(ProgrammeData *)myProgramme
